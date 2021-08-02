@@ -380,6 +380,10 @@ export default {
             },
           });
 
+          chart.background().fill({
+            color: "rgba(0,0,0,0)",
+            mode: "fit",
+          });
           // create scroller series with mapped data
           chart.scroller().ohlc(mapping);
           // set container id for the chart

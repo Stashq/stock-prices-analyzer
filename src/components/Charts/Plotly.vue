@@ -66,6 +66,8 @@ export default {
         type: 'linear'
     },
     title: "Plotly",
+      paper_bgcolor: 'rgba(0,0,0,0.2)',
+        plot_bgcolor: 'rgba(0,0,0,0)',
     };
 },
 };
