@@ -55,9 +55,5 @@ export default {
     background-color: inherit;
     border-color: transparent;
 }
-
-/deep/ #my-modal > .modal-dialog > .modal-content > .modal-header {
-  color: black;
-}
 </style>
 

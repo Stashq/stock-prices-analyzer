@@ -110,14 +110,10 @@ export default {
 
 <style scoped>
 
-a {
-    transition: 0.5s;
-}
-
 a:hover {
-  -ms-transform: scale(1.2);
-  -webkit-transform: scale(1.2);
-  transform: scale(1.2);
+  -ms-transform: scale(1.1);
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
   background-color:rgba(0, 0, 0, 0.3);
 }
 
