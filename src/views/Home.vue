@@ -3,27 +3,41 @@
     <Navbar />
     <Sidebar />
     <main>
-      <Plotly />
-      <Anychart />
-      <Chart />
+      <div class="chart">
+        <Plotly />
+      </div>
+      <!-- <Anychart /> -->
+      <!-- <Chart /> -->
     </main>
   </div>
 </template>
-); }
+
+<style scoped>
+main {
+  margin-left: 290px;
+}
+
+.chart {
+  background-color: #6d379969;
+  padding-right: 20px;
+  margin: 10px 30px 10px 30px;
+  border-radius: 25px;
+}
+</style>
 
 <script>
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
-import Chart from "../components//Charts/ChartJS.vue";
-import Anychart from "../components/Charts/Anychart.vue";
+// import Chart from "../components//Charts/ChartJS.vue";
+// import Anychart from "../components/Charts/Anychart.vue";
 import PlotlyChart from "../components/Charts/Plotly.vue";
 
 export default {
   components: {
     Navbar: Navbar,
     Sidebar: Sidebar,
-    Chart: Chart,
-    Anychart: Anychart,
+    // Chart: Chart,
+    // Anychart: Anychart,
     Plotly: PlotlyChart,
   },
   data() {
@@ -42,9 +56,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-main {
-  margin-left: 290px;
-}
-</style>

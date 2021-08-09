@@ -25,7 +25,4 @@ html, body {
   background-image: radial-gradient(#b44b4b, #9198e5);
 }
 
-body {
-    height: 200vh;
-}
 </style>
