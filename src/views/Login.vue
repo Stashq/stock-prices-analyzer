@@ -316,8 +316,9 @@ input[type="text"]:placeholder {
 </style>
 
 <script>
-import axios from "axios";
+import { stringify } from "querystringify";
 import Navbar from "../components/Navbar";
+import api from "../api";
 
 export default {
   name: "Authentication",
@@ -334,17 +335,23 @@ export default {
   methods: {
     logIn: function (e) {
       e.preventDefault();
-      axios({
-        method: "post",
-        url: "http://127.0.0.1:8000/token",
-        data: `grant_type=&username=${this.login}&password=${this.password}&scope=&client_id=&client_secret=`,
-        headers: {
-          accept: "application/json",
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      })
-        .then(() => {
+      api
+        .post(
+          "/token",
+          stringify({
+            grant_type: null,
+            username: this.login,
+            password: this.password,
+            scope: null,
+            client_id: null,
+            client_secret: null,
+          })
+        )
+        .then((response) => {
           this.error_info = null;
+          api.defaults.headers.common[
+            "Authorization"
+          ] = `${response.data.token_type} ${response.data.access_token}`;
           this.$router.push("home");
         })
         .catch((error) => {

@@ -1,6 +1,6 @@
 <template>
   <div class="chart">
-    <button type="button" class="btn-chart-position-control">
+    <button @click="$emit('chart-pick-up', chart.id)" type="button" class="btn-chart-position-control">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="16"
@@ -37,7 +37,7 @@
       <span> Delete </span>
     </button>
     <div>
-      <button type="button" class="btn-chart-position-control">
+      <button @click="$emit('chart-pull-down', chart.id)" type="button" class="btn-chart-position-control">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="16"
@@ -252,11 +252,11 @@ export default {
         range: [114.609999778, 137.410004222],
         type: "linear",
       },
-      title: "Plotly",
+      title: this.chart.id,
       paper_bgcolor: "rgba(0,0,0,0)",
       plot_bgcolor: "rgba(0,0,0,0)",
     };
   },
-  emits: ["delete-chart"],
+  emits: ["delete-chart", "chart-pick-up", "chart-pull-down"],
 };
 </script>
