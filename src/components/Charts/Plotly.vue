@@ -252,7 +252,7 @@ export default {
         range: [114.609999778, 137.410004222],
         type: "linear",
       },
-      title: this.chart.id,
+      title: `${this.chart.grain}: ${this.chart.start_date} - ${this.chart.end_date}`,
       paper_bgcolor: "rgba(0,0,0,0)",
       plot_bgcolor: "rgba(0,0,0,0)",
     };

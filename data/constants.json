@@ -1,0 +1,11 @@
+{
+    "grains": [
+        "coffee",
+        "corn",
+        "cotton",
+        "oats",
+        "soybean",
+        "sugar",
+        "wheat"
+    ]
+}

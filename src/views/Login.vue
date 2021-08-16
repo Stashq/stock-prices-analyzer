@@ -318,7 +318,6 @@ input[type="text"]:placeholder {
 <script>
 import { stringify } from "querystringify";
 import Navbar from "../components/Navbar";
-import api from "../api";
 
 export default {
   name: "Authentication",
@@ -335,32 +334,35 @@ export default {
   methods: {
     logIn: function (e) {
       e.preventDefault();
-      api
+      this.$api
         .post(
           "/token",
           stringify({
             grant_type: null,
             username: this.login,
             password: this.password,
-            scope: null,
+            scope: ["grains_prices"],
             client_id: null,
             client_secret: null,
           })
         )
-        .then((response) => {
+        .then((res) => {
           this.error_info = null;
-          api.defaults.headers.common[
-            "Authorization"
-          ] = `${response.data.token_type} ${response.data.access_token}`;
+          const token = `${res.data.token_type} ${res.data.access_token}`;
+          localStorage.setItem('token', token)
+          this.$api.defaults.headers.common[
+            "Authorization" 
+          ] = token
           this.$router.push("home");
         })
-        .catch((error) => {
-          if (!error.response) {
+        .catch((err) => {
+          if (!err.response) {
             // network error
+            console.log(err)
             this.error_info = "Connection refused. Please, try later.";
-          } else if (error.response.status == 500) {
+          } else if (err.response.status == 500) {
             this.error_info = "Internal server error. Please, try later.";
-          } else if (error.response.status >= 400) {
+          } else if (err.response.status >= 400) {
             this.error_info = "Bad login or password.";
           } else {
             this.error_info = null;

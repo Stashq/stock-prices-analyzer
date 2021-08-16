@@ -13,12 +13,7 @@
           @chart-pull-down="pullDownChart"
         />
       </div>
-
-      <div class="dashboard-container">
-        <button @click="addChart" type="button" class="btn-plot-adder">
-          <b-icon class="plus-icon" icon="plus-square" />
-        </button>
-      </div>
+      <AddPlotBtn @add-chart="addChart" />
     </main>
   </div>
 </template>
@@ -29,17 +24,8 @@ main {
 }
 
 .dashboard-container {
-  margin: 10px 30px 10px 30px;
   border-radius: 25px;
-}
-
-.btn-plot-adder {
-  display: block;
-  width: 100%;
-  border-radius: 25px;
-  border: 0px;
-  background-color: #64077769;
-  color: white;
+  margin: 10px 30px;
 }
 </style>
 
@@ -49,6 +35,7 @@ import Sidebar from "../components/Sidebar";
 // import Chart from "../components//Charts/ChartJS.vue";
 // import Anychart from "../components/Charts/Anychart.vue";
 import PlotlyChart from "../components/Charts/Plotly.vue";
+import AddPlotBtn from "../components/AddChartBtn.vue";
 
 export default {
   components: {
@@ -57,6 +44,7 @@ export default {
     // Chart: Chart,
     // Anychart: Anychart,
     Plotly: PlotlyChart,
+    AddPlotBtn: AddPlotBtn,
   },
   data() {
     return {
@@ -65,13 +53,21 @@ export default {
     };
   },
   methods: {
-    addChart() {
+    async addChart(start_date, end_date, grain) {
+      console.log(this.$api.defaults.headers.common);
+      const data = await this.$api.get(`/prices/${grain}`, {
+        params: {
+          start_date: start_date,
+          end_date: end_date,
+        },
+      });
+      console.log(data.data);
       const newChart = {
         id: this.charts_counter,
-        grain: null,
+        grain: grain,
         data: null,
-        start_date: null,
-        end_date: null,
+        start_date: start_date,
+        end_date: end_date,
       };
       this.charts_counter += 1;
       this.charts = [...this.charts, newChart];
