@@ -1,16 +1,18 @@
 <template>
   <div class="chart">
-    <ChartPickUpButton @chart-pick-up="$emit('chart-pick-up', chart.id)" />
+    <ChartPickUpButton @chart-pick-up="$emit('chart-pick-up', chart.id)"/>
 
-    <ChartTypeModifier @change-chart-type="changeChartType" />
+    <ChartTypeModifier @change-chart-type="changeChartType"/>
 
-    <OHLCRecordRangeSelector
-      @ohlc-record-range-changed="changeOhlcRecordRange"
-    />
+    <OHLCRecordRangeSelector @ohlc-record-range-changed="changeOhlcRecordRange"/>
 
-    <FunctionsSelector @add-analysing-function="addAnalysingFunction" />
+    <FunctionsSelector @add-analysing-function="addAnalysingFunction"/>
 
-    <AppliedFunctionsList :appliedFunctions="appliedFunctions" />
+    <div>
+      <span :key="fun.id" v-for="fun in appliedFunctions">
+        {{ fun.name }}
+      </span>
+    </div>
 
     <Plotly
       :data="processed_data"
@@ -18,11 +20,8 @@
       :display-mode-bar="false"
     ></Plotly>
 
-    <DeleteChartButton @delete-chart="$emit('delete-chart', chart.id)" />
-
-    <ChartPullDownButton
-      @chart-pull-down="$emit('chart-pull-down', chart.id)"
-    />
+    <DeleteChartButton @delete-chart="$emit('delete-chart', chart.id)"/>
+    <ChartPullDownButton @chart-pull-down="$emit('chart-pull-down', chart.id)"/>
   </div>
 </template>
 
@@ -39,13 +38,13 @@
 <script>
 import { Plotly } from "vue-plotly";
 import * as d3 from "d3";
-import ChartPickUpButton from "./ChartBlockElements/ChartPickUpBtn.vue";
-import ChartPullDownButton from "./ChartBlockElements/ChartPullDownBtn.vue";
-import DeleteChartButton from "./ChartBlockElements/DeleteChartBtn.vue";
-import ChartTypeModifier from "./ChartBlockElements/ChartTypeModifier.vue";
-import OHLCRecordRangeSelector from "./ChartBlockElements/OHLCRecordRangeSelector.vue";
-import FunctionsSelector from "./ChartBlockElements/FunctionsSelector.vue";
-import AppliedFunctionsList from "./ChartBlockElements/AppliedFunctionsList.vue"
+import ChartPickUpButton from "./ChartBlockElements/ChartPickUpBtn.vue"
+import ChartPullDownButton from "./ChartBlockElements/ChartPullDownBtn.vue"
+import DeleteChartButton from "./ChartBlockElements/DeleteChartBtn.vue"
+import ChartTypeModifier from "./ChartBlockElements/ChartTypeModifier.vue"
+import OHLCRecordRangeSelector from "./ChartBlockElements/OHLCRecordRangeSelector.vue"
+import FunctionsSelector from "./ChartBlockElements/FunctionsSelector.vue"
+
 
 export default {
   name: "PlotlyChart",
@@ -57,7 +56,6 @@ export default {
     ChartTypeModifier,
     OHLCRecordRangeSelector,
     FunctionsSelector,
-    AppliedFunctionsList,
   },
   data() {
     return {
@@ -73,7 +71,7 @@ export default {
     chart: Object,
   },
   created: function () {
-    console.log(this.chart.id);
+      console.log(this.chart.id)
     const selectorOptions = {
       buttons: [
         {
@@ -251,8 +249,8 @@ export default {
       this.plotChart();
     },
     changeOhlcRecordRange(range) {
-      this.ohlcRecordRange = range;
-      this.plotChart();
+        this.ohlcRecordRange = range;
+        this.plotChart();
     },
     addAnalysingFunction(func) {
       this.appliedFunctions = [...this.appliedFunctions, func];
