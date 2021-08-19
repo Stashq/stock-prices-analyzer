@@ -87,17 +87,17 @@
 </style>
 
 <script>
-const constants = require("../../data/constants.json");
-
 export default {
   name: "AddPlotBtn",
+  props: {
+    available_grains: [],
+  },
   data() {
     return {
       start_date: null,
       end_date: null,
       selected_grain: null,
       isDisabled: true,
-      available_grains: constants.grains,
     };
   },
   methods: {

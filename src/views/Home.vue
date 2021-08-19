@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Navbar />
+    <Navbar @sing-out="singOut" />
     <Sidebar />
     <main>
       <!-- <Anychart /> -->
@@ -13,7 +13,7 @@
           @chart-pull-down="pullDownChart"
         />
       </div>
-      <AddPlotBtn @add-chart="addChart" />
+      <AddPlotBtn :available_grains="available_grains" @add-chart="addChart" />
     </main>
   </div>
 </template>
@@ -37,6 +37,8 @@ import Sidebar from "../components/Sidebar";
 import PlotlyChart from "../components/Charts/Plotly.vue";
 import AddPlotBtn from "../components/AddChartBtn.vue";
 
+const constants = require("../../data/constants.json");
+
 export default {
   components: {
     Navbar: Navbar,
@@ -50,27 +52,36 @@ export default {
     return {
       charts: [],
       charts_counter: 0,
+      available_grains: constants.grains,
+      user: null,
     };
   },
   methods: {
     async addChart(start_date, end_date, grain) {
-      console.log(this.$api.defaults.headers.common);
-      const data = await this.$api.get(`/prices/${grain}`, {
-        params: {
-          start_date: start_date,
-          end_date: end_date,
-        },
-      });
-      console.log(data.data);
-      const newChart = {
-        id: this.charts_counter,
-        grain: grain,
-        data: null,
-        start_date: start_date,
-        end_date: end_date,
-      };
-      this.charts_counter += 1;
-      this.charts = [...this.charts, newChart];
+      this.$api
+        .get(`/prices/${grain}`, {
+          params: {
+            start_date: start_date,
+            end_date: end_date,
+          },
+        })
+        .then((res) => {
+          // TODO: przejść z obserwacji na format json
+          const data = JSON.parse(JSON.stringify(res.data))[grain];
+          const newChart = {
+            id: this.charts_counter,
+            grain: grain,
+            data: data,
+            start_date: start_date,
+            end_date: end_date,
+          };
+          this.charts_counter += 1;
+          this.charts = [...this.charts, newChart];
+        })
+        .catch((err) => {
+          // TODO: obsłużyć wszystkie możliwe wyjątki
+          console.log(err);
+        });
     },
     deleteChart(id) {
       if (confirm("Are you sure?")) {
@@ -96,6 +107,19 @@ export default {
         const endArr = this.charts.filter((item, index) => index > idx + 1);
         this.charts = [...startArr, elAfter, el, ...endArr];
       }
+    },
+    singOut() {
+      this.$api
+        .post("/logout")
+        .then(() => {
+          this.$api.defaults.headers.common["Authorization"] = null;
+          localStorage.removeItem("token");
+          this.$router.push("/login");
+        })
+        .catch((err) => {
+          this.$router.push("/login");
+          console.log(err);
+        });
     },
   },
 };

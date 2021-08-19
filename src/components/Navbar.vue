@@ -31,13 +31,9 @@
           <b-dropdown-item href="#">PL</b-dropdown-item>
         </b-nav-item-dropdown>
 
-        <b-nav-item-dropdown right>
-          <!-- Using 'button-content' slot -->
-          <template #button-content>
-            <em>User</em>
-          </template>
+        <b-nav-item-dropdown right text="User">
           <b-dropdown-item href="#">Profile</b-dropdown-item>
-          <b-dropdown-item href="#">Sign Out</b-dropdown-item>
+          <b-dropdown-item @click="$emit('sing-out')">Sign Out</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
     </b-collapse>
@@ -47,6 +43,7 @@
 <script>
 export default {
   name: "Navbar",
+  emit: ["sing-out"],
 };
 </script>
 

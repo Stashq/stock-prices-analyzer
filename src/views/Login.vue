@@ -319,6 +319,8 @@ input[type="text"]:placeholder {
 import { stringify } from "querystringify";
 import Navbar from "../components/Navbar";
 
+
+
 export default {
   name: "Authentication",
   components: {
@@ -356,6 +358,7 @@ export default {
           this.$router.push("home");
         })
         .catch((err) => {
+          console.log(err)
           if (!err.response) {
             // network error
             console.log(err)
