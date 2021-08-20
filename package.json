@@ -16,6 +16,7 @@
     "chart.js": "^2.9.4",
     "core-js": "^3.6.5",
     "d3": "^7.0.1",
+    "moving-averages": "^4.0.6",
     "mutationobserver-shim": "^0.3.7",
     "popper.js": "^1.16.1",
     "portal-vue": "^2.1.7",

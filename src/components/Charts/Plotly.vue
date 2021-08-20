@@ -1,79 +1,48 @@
 <template>
-  <div class="chart">
-    <ChartPickUpButton @chart-pick-up="$emit('chart-pick-up', chart.id)" />
-
-    <ChartTypeModifier @change-chart-type="changeChartType" />
-
-    <OHLCRecordRangeSelector
-      @ohlc-record-range-changed="changeOhlcRecordRange"
-    />
-
-    <FunctionsSelector @add-analysing-function="addAnalysingFunction" />
-
-    <AppliedFunctionsList :appliedFunctions="appliedFunctions" />
-
-    <Plotly
-      :data="processed_data"
-      :layout="layout"
-      :display-mode-bar="false"
-    ></Plotly>
-
-    <DeleteChartButton @delete-chart="$emit('delete-chart', chart.id)" />
-
-    <ChartPullDownButton
-      @chart-pull-down="$emit('chart-pull-down', chart.id)"
-    />
-  </div>
+  <Plotly :data="traces" :layout="layout" :display-mode-bar="false"></Plotly>
 </template>
 
 <style scoped>
-.chart {
-  padding-right: 20px;
-  background-color: #6d379969;
-  overflow: hidden;
-  position: relative;
-  border-radius: inherit;
-}
 </style>
 
 <script>
 import { Plotly } from "vue-plotly";
 import * as d3 from "d3";
-import ChartPickUpButton from "./ChartBlockElements/ChartPickUpBtn.vue";
-import ChartPullDownButton from "./ChartBlockElements/ChartPullDownBtn.vue";
-import DeleteChartButton from "./ChartBlockElements/DeleteChartBtn.vue";
-import ChartTypeModifier from "./ChartBlockElements/ChartTypeModifier.vue";
-import OHLCRecordRangeSelector from "./ChartBlockElements/OHLCRecordRangeSelector.vue";
-import FunctionsSelector from "./ChartBlockElements/FunctionsSelector.vue";
-import AppliedFunctionsList from "./ChartBlockElements/AppliedFunctionsList.vue"
+import {
+  ma, // dma, ema, sma, wma
+} from "moving-averages";
 
 export default {
   name: "PlotlyChart",
   components: {
     Plotly,
-    ChartPickUpButton,
-    ChartPullDownButton,
-    DeleteChartButton,
-    ChartTypeModifier,
-    OHLCRecordRangeSelector,
-    FunctionsSelector,
-    AppliedFunctionsList,
   },
   data() {
     return {
-      processed_data: null,
+      baseTrace: null,
+      functionsTraces: [],
+      traces: [],
       layout: null,
-      chartType: "line",
-      appliedFunctions: [],
-      addedFunction: null,
-      ohlcRecordRange: "day",
     };
   },
   props: {
     chart: Object,
+    chartType: String,
+    appliedFunctions: [],
+    ohlcRecordRange: String,
+  },
+  watch: {
+    chartType: function () {
+      this.plotChart();
+    },
+    appliedFunctions: function () {
+      this.addSimpleMovingAverageEnvelope(20, 10);
+    },
+    ohlcRecordRange: function () {
+      this.plotChart();
+    },
   },
   created: function () {
-    console.log(this.chart.id);
     const selectorOptions = {
       buttons: [
         {
@@ -200,29 +169,30 @@ export default {
       } else if (this.chartType === "ohlc") {
         this.plotOHLC(data, this.chartType);
       } else if (this.chartType === "line") {
-        this.plotLineChart(data);
+        this.plotLine(data);
       } else {
         throw `Unknown chart type - "${this.chartType}".`;
       }
     },
-    plotLineChart(data) {
-      var trace1 = {
+    plotLine(data) {
+      var trace = {
         type: "scatter",
         mode: "lines",
-        name: "AAPL High",
+        name: "Prices",
         x: data.map((d) => d.date),
         y: data.map((d) => d.price),
         line: { color: "#17BECF" },
       };
 
-      this.processed_data = [trace1];
+      this.baseTrace = trace;
+      this.traces = [this.baseTrace, ...this.functionsTraces];
     },
     plotOHLC(data, chartType) {
       if (!chartType || !["candlestick", "ohlc"].includes(chartType)) {
         throw `Unknown OHLC type - "${chartType}".`;
       }
       const ohlc_data = this.convertToOHLC(data);
-      const trace1 = {
+      const trace = {
         x: ohlc_data.map((item) => item.date),
 
         close: ohlc_data.map((item) => item.close),
@@ -239,24 +209,61 @@ export default {
 
         open: ohlc_data.map((item) => item.open),
 
+        name: "Prices",
         type: chartType,
         xaxis: "x",
         yaxis: "y",
       };
 
-      this.processed_data = [trace1];
+      this.baseTrace = trace;
+      this.traces = [this.baseTrace, ...this.functionsTraces];
     },
-    changeChartType(chartType) {
-      this.chartType = chartType;
-      this.plotChart();
+    addSimpleMovingAverage(period) {
+      //TODO: validate length of timeseries and period
+      const prices = this.chart.data.map((d) => d.price);
+      const movingAverage = ma(prices, period);
+      const dates = this.chart.data
+        .slice(this.chart.data.length - movingAverage.length)
+        .map((d) => d.date);
+
+      const trace = {
+        type: "scatter",
+        mode: "lines",
+        name: `Moving average ${period}`,
+        x: dates,
+        y: movingAverage,
+        line: { color: "rgb(102, 0, 255)" },
+      };
+
+      this.functionsTraces = [...this.functionsTraces, trace];
+      this.traces = [this.baseTrace, ...this.functionsTraces];
     },
-    changeOhlcRecordRange(range) {
-      this.ohlcRecordRange = range;
-      this.plotChart();
-    },
-    addAnalysingFunction(func) {
-      this.appliedFunctions = [...this.appliedFunctions, func];
-      console.log(this.appliedFunctions);
+    addSimpleMovingAverageEnvelope(period, precent) {
+      //TODO: validate length of timeseries and period
+      const prices = this.chart.data.map((d) => d.price);
+      const movingAverage = ma(prices, period);
+      const dates = this.chart.data
+        .slice(this.chart.data.length - movingAverage.length)
+        .map((d) => d.date);
+
+      var lowerTrace = {
+        x: dates,
+        y: movingAverage.map((item) => item*(1 - 0.01*precent)),
+        fill: null,
+        type: "scatter",
+        line: { color: "rgb(0, 153, 51)" },
+      };
+
+      var upperTrace = {
+        x: dates,
+        y: movingAverage.map((item) => item*(1 + 0.01*precent)),
+        fill: "tonexty",
+        type: "scatter",
+        line: { color: "rgb(0, 153, 51)" },
+      };
+
+      this.functionsTraces = [...this.functionsTraces, lowerTrace, upperTrace];
+      this.traces = [this.baseTrace, ...this.functionsTraces];
     },
   },
   emits: ["delete-chart", "chart-pick-up", "chart-pull-down"],
