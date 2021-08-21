@@ -1,8 +1,12 @@
 <template>
   <div class="dashboard-container">
-    <form
+    <!-- <form
       id="addChart"
       @submit.prevent="$emit('add-chart', start_date, end_date, selected_grain)"
+    > -->
+    <form
+      id="addChart"
+      @submit.prevent="$emit('add-chart', '2020-01-01T00:00:00+0000', '2021-01-01T00:00:00+0000', 'oats')"
     >
       <div class="form-block">
         <h2>Start date</h2>
@@ -97,7 +101,8 @@ export default {
       start_date: null,
       end_date: null,
       selected_grain: null,
-      isDisabled: true,
+    //   isDisabled: true,
+      isDisabled: false,
     };
   },
   methods: {

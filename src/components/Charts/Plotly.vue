@@ -25,12 +25,13 @@ export default {
       functionsTraces: [],
       traces: [],
       layout: null,
+      plotlyChart: null,
     };
   },
   props: {
     chart: Object,
     chartType: String,
-    appliedFunctions: [],
+    appliedFunctions: Array,
     ohlcRecordRange: String,
     addedFunction: Object,
     removedFunction: Object,
@@ -41,13 +42,15 @@ export default {
     },
     addedFunction: function () {
       if (this.addedFunction.type === "moving average") {
-        this.addSimpleMovingAverage(this.addedFunction.args.period);
+        this.addSimpleMovingAverage(this.addedFunction);
       } else if (this.addedFunction.type === "moving average envelope") {
-        this.addSimpleMovingAverageEnvelope(
-          this.addedFunction.args.period,
-          this.addedFunction.args.precent
-        );
+        this.addSimpleMovingAverageEnvelope(this.addedFunction);
       }
+    },
+    removedFunction: function () {
+       this.traces = this.traces.filter((trace) => trace.funcName !== this.removedFunction.name);
+       
+       console.log(this.plotlyChart);
     },
     ohlcRecordRange: function () {
       this.plotChart();
@@ -164,50 +167,53 @@ export default {
       this.baseTrace = trace;
       this.traces = [this.baseTrace, ...this.functionsTraces];
     },
-    addSimpleMovingAverage(period) {
+    addSimpleMovingAverage(func) {
       //TODO: validate length of timeseries and period
       const prices = this.chart.data.map((d) => d.price);
-      const movingAverage = ma(prices, period);
+      const movingAverage = ma(prices, func.args.period);
       const dates = this.chart.data
         .slice(this.chart.data.length - movingAverage.length)
         .map((d) => d.date);
 
       const trace = {
+        funcName: func.name,
         type: "scatter",
         mode: "lines",
-        name: `MA (${period})`,
+        name: `MA (${func.args.period})`,
         x: dates,
         y: movingAverage,
-        line: { color: "rgb(102, 0, 255)" },
+        line: { color: func.color },
       };
 
       this.functionsTraces = [...this.functionsTraces, trace];
       this.traces = [this.baseTrace, ...this.functionsTraces];
     },
-    addSimpleMovingAverageEnvelope(period, precent) {
+    addSimpleMovingAverageEnvelope(func) {
       //TODO: validate length of timeseries and period
       const prices = this.chart.data.map((d) => d.price);
-      const movingAverage = ma(prices, period);
+      const movingAverage = ma(prices, func.args.period);
       const dates = this.chart.data
         .slice(this.chart.data.length - movingAverage.length)
         .map((d) => d.date);
 
       var lowerTrace = {
+        funcName: func.name,
         x: dates,
-        y: movingAverage.map((item) => item * (1 - 0.01 * precent)),
+        y: movingAverage.map((item) => item * (1 - 0.01 * func.args.precent)),
         fill: null,
-        name: `MA_low(${period}, -${precent})`,
+        name: `MA_low(${func.args.period}, -${func.args.precent})`,
         type: "scatter",
-        line: { color: "rgb(0, 153, 51)" },
+        line: { color: func.color },
       };
 
       var upperTrace = {
+        funcName: func.name,
         x: dates,
-        y: movingAverage.map((item) => item * (1 + 0.01 * precent)),
+        y: movingAverage.map((item) => item * (1 + 0.01 * func.args.precent)),
         fill: "tonexty",
-        name: `MA_high(${period}, +${precent})`,
+        name: `MA_high(${func.args.period}, +${func.args.precent})`,
         type: "scatter",
-        line: { color: "rgb(0, 153, 51)" },
+        line: { color: func.color },
       };
 
       this.functionsTraces = [...this.functionsTraces, lowerTrace, upperTrace];

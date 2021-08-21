@@ -18,6 +18,7 @@
     "d3": "^7.0.1",
     "moving-averages": "^4.0.6",
     "mutationobserver-shim": "^0.3.7",
+    "one-colorpicker": "^1.0.12",
     "popper.js": "^1.16.1",
     "portal-vue": "^2.1.7",
     "querystringify": "^2.2.0",

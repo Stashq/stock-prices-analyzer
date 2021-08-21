@@ -8,7 +8,7 @@
       @ohlc-record-range-changed="changeOhlcRecordRange"
     />
 
-    <FunctionsSelector :appliedFunctions="appliedFunctions" @add-analysing-function="addAnalysingFunction" />
+    <FunctionsSelector :chart_id="chart.id" :appliedFunctions="appliedFunctions" @add-analysing-function="addAnalysingFunction" />
 
     <AppliedFunctionsList
       :appliedFunctions="appliedFunctions"
