@@ -12,6 +12,8 @@ import {
   ma, // dma, ema, sma, wma
 } from "moving-averages";
 
+import constants from "../../../data/constants.json";
+
 export default {
   name: "PlotlyChart",
   components: {
@@ -30,89 +32,33 @@ export default {
     chartType: String,
     appliedFunctions: [],
     ohlcRecordRange: String,
+    addedFunction: Object,
+    removedFunction: Object,
   },
   watch: {
     chartType: function () {
       this.plotChart();
     },
-    appliedFunctions: function () {
-      this.addSimpleMovingAverageEnvelope(20, 10);
+    addedFunction: function () {
+      if (this.addedFunction.type === "moving average") {
+        this.addSimpleMovingAverage(this.addedFunction.args.period);
+      } else if (this.addedFunction.type === "moving average envelope") {
+        this.addSimpleMovingAverageEnvelope(
+          this.addedFunction.args.period,
+          this.addedFunction.args.precent
+        );
+      }
     },
     ohlcRecordRange: function () {
       this.plotChart();
     },
   },
   created: function () {
-    const selectorOptions = {
-      buttons: [
-        {
-          step: "month",
-          stepmode: "backward",
-          count: 1,
-          label: "1m",
-        },
-        {
-          step: "month",
-          stepmode: "backward",
-          count: 6,
-          label: "6m",
-        },
-        {
-          step: "year",
-          stepmode: "todate",
-          count: 1,
-          label: "YTD",
-        },
-        {
-          step: "year",
-          stepmode: "backward",
-          count: 1,
-          label: "1y",
-        },
-        {
-          step: "all",
-        },
-      ],
-      font: {
-        color: "black",
-      },
-    };
-
-    const sliderOptions = {
-      bgcolor: "rgba(255, 255, 255, 0.5)",
-      borderwidth: "30px",
-    };
-    this.layout = {
-      dragmode: "zoom",
-      font: {
-        color: "white",
-      },
-      margin: {
-        r: 10,
-        t: 25,
-        b: 40,
-        l: 60,
-      },
-      showlegend: false,
-      xaxis: {
-        autorange: true,
-        domain: [0, 1],
-        range: [this.chart.start_date, this.chart.end_date],
-        rangeslider: sliderOptions,
-        rangeselector: selectorOptions,
-        type: "date",
-      },
-      yaxis: {
-        autorange: true,
-        domain: [0, 1],
-        type: "linear",
-      },
-      title: {
-        text: `<b>${this.chart.grain}</b>: ${this.chart.start_date} - ${this.chart.end_date}`,
-        font: { size: 23 },
-      },
-      paper_bgcolor: "rgba(0,0,0,0)",
-      plot_bgcolor: "rgba(0,0,0,0)",
+    this.layout = constants.chart_layout.layout;
+    this.layout.range = [this.chart.start_date, this.chart.end_date];
+    this.layout.title = {
+      text: `<b>${this.chart.grain}</b>: ${this.chart.start_date} - ${this.chart.end_date}`,
+      font: { size: 23 },
     };
 
     this.plotChart();
@@ -122,25 +68,25 @@ export default {
       data.sort((a, b) => d3.ascending(a.date, b.date));
       if (this.ohlcRecordRange === "minute") {
         data.forEach(
-          (d) => (d.date = d.date.slice(0, 17) + "00" + d.date.slice(19))
+          (d) => (d.date = d.date.slice(0, 17) + "30" + d.date.slice(19))
         );
       } else if (this.ohlcRecordRange === "hour") {
         data.forEach(
-          (d) => (d.date = d.date.slice(0, 14) + "00:00" + d.date.slice(19))
+          (d) => (d.date = d.date.slice(0, 14) + "30:00" + d.date.slice(19))
         );
       } else if (this.ohlcRecordRange === "day") {
         data.forEach(
-          (d) => (d.date = d.date.slice(0, 11) + "00:00:00" + d.date.slice(19))
+          (d) => (d.date = d.date.slice(0, 11) + "12:00:00" + d.date.slice(19))
         );
       } else if (this.ohlcRecordRange === "month") {
         data.forEach(
           (d) =>
-            (d.date = d.date.slice(0, 8) + "01T00:00:00" + d.date.slice(19))
+            (d.date = d.date.slice(0, 8) + "15T00:00:00" + d.date.slice(19))
         );
       } else if (this.ohlcRecordRange === "year") {
         data.forEach(
           (d) =>
-            (d.date = d.date.slice(0, 5) + "01-01T00:00:00" + d.date.slice(19))
+            (d.date = d.date.slice(0, 5) + "07-01T00:00:00" + d.date.slice(19))
         );
       }
       var allDates = [...new Set(data.map((d) => d.date))];
@@ -229,7 +175,7 @@ export default {
       const trace = {
         type: "scatter",
         mode: "lines",
-        name: `Moving average ${period}`,
+        name: `MA (${period})`,
         x: dates,
         y: movingAverage,
         line: { color: "rgb(102, 0, 255)" },
@@ -248,16 +194,18 @@ export default {
 
       var lowerTrace = {
         x: dates,
-        y: movingAverage.map((item) => item*(1 - 0.01*precent)),
+        y: movingAverage.map((item) => item * (1 - 0.01 * precent)),
         fill: null,
+        name: `MA_low(${period}, -${precent})`,
         type: "scatter",
         line: { color: "rgb(0, 153, 51)" },
       };
 
       var upperTrace = {
         x: dates,
-        y: movingAverage.map((item) => item*(1 + 0.01*precent)),
+        y: movingAverage.map((item) => item * (1 + 0.01 * precent)),
         fill: "tonexty",
+        name: `MA_high(${period}, +${precent})`,
         type: "scatter",
         line: { color: "rgb(0, 153, 51)" },
       };

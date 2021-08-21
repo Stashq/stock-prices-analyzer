@@ -8,15 +8,20 @@
       @ohlc-record-range-changed="changeOhlcRecordRange"
     />
 
-    <FunctionsSelector @add-analysing-function="addAnalysingFunction" />
+    <FunctionsSelector :appliedFunctions="appliedFunctions" @add-analysing-function="addAnalysingFunction" />
 
-    <AppliedFunctionsList :appliedFunctions="appliedFunctions" />
+    <AppliedFunctionsList
+      :appliedFunctions="appliedFunctions"
+      @remove-function="removeAnalysingFunction"
+    />
 
     <PlotlyChart
       :key="chart.id"
       :chart="chart"
       :chartType="chartType"
       :appliedFunctions="appliedFunctions"
+      :addedFunction="addedFunction"
+      :removedFunction="removedFunction"
       :ohlcRecordRange="ohlcRecordRange"
     />
 
@@ -35,6 +40,20 @@
   overflow: hidden;
   position: relative;
   border-radius: inherit;
+}
+
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
 </style>
 
@@ -65,6 +84,9 @@ export default {
       chartType: "line",
       appliedFunctions: [],
       ohlcRecordRange: "day",
+      functionSelectorIsOpen: false,
+      addedFunction: null,
+      removedFunction: null,
     };
   },
   props: {
@@ -79,6 +101,13 @@ export default {
     },
     addAnalysingFunction(func) {
       this.appliedFunctions = [...this.appliedFunctions, func];
+      this.addedFunction = func;
+    },
+    removeAnalysingFunction(func) {
+      this.appliedFunctions = this.appliedFunctions.filter(
+        (item) => item.name !== func.name
+      );
+      this.removedFunction = func;
     },
   },
   emits: ["delete-chart", "chart-pick-up", "chart-pull-down"],
