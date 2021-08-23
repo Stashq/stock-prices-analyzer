@@ -276,6 +276,7 @@ input[type="text"]:placeholder {
 }
 
 .fadeIn.third {
+    -webkit-text-security: disc;
   -webkit-animation-delay: 0.8s;
   -moz-animation-delay: 0.8s;
   animation-delay: 0.8s;

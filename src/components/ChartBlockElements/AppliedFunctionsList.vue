@@ -1,6 +1,6 @@
 <template>
   <div v-if="appliedFunctions.length !== 0" class="functions-list">
-    <div class="functions-list-el" :key="func.name" v-for="func in appliedFunctions">
+    <div :style="`background-color: ${func.color};`" class="functions-list-el" :key="func.name" v-for="func in appliedFunctions">
       <span class="function-span">
         {{ func.name }}
       </span>
@@ -23,14 +23,13 @@
 
 .functions-list-el {
   display: inline-block;
-  background-color: #6d379969;
-  margin: 0px 5px;
+  margin: 3px 5px;
+  
   border-radius: 5px;
 }
 
 .function-span {
   color: white;
-  background-color: #6d379900;
   padding: 5px;
 }
 
@@ -39,7 +38,7 @@
   background-color: #6d3799c4;
   padding: 5px;
   border: 0px;
-  border-radius: 0px 5px 5px 0px;
+  border-radius: 0px 4px 4px 0px;
 }
 
 </style>

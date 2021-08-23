@@ -4,7 +4,7 @@
     <Sidebar />
     <main>
       <div :key="chart.id" v-for="chart in charts" class="dashboard-container">
-        <Chart
+        <ChartBlock
           :chart="chart"
           @delete-chart="deleteChart"
           @chart-pick-up="pickUpChart"
@@ -30,17 +30,17 @@ main {
 <script>
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
-import Chart from "../components/Chart.vue";
+import ChartBlock from "../components/ChartBlock.vue";
 import AddPlotBtn from "../components/AddChartBtn.vue";
 
 const constants = require("../../data/constants.json");
 
 export default {
   components: {
-    Navbar: Navbar,
-    Sidebar: Sidebar,
-    Chart: Chart,
-    AddPlotBtn: AddPlotBtn,
+    Navbar,
+    Sidebar,
+    ChartBlock,
+    AddPlotBtn,
   },
   data() {
     return {

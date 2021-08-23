@@ -1,10 +1,12 @@
 <template>
   <div>
-    <b-button v-b-modal="chart_id.toString(2)">Add function</b-button>
+    <b-button class="show-modal-btn" v-b-modal="chart_id.toString(2)"
+      >Add function</b-button
+    >
 
     <b-modal
       :id="chart_id.toString(2)"
-      title="Function selector"
+      title="Choose function"
       :ok-disabled="okDisable"
       @ok="emitAddFunction"
     >
@@ -50,6 +52,19 @@
 </template>
 
 <style scoped>
+.show-modal-btn {
+  margin: 5px 0px;
+  border-radius: 5px;
+  border: 0px;
+  padding: 1px;
+  height: 40px;
+  width: 25%;
+  background-color: #b44b4b;
+  color: white;
+  overflow: hidden;
+  font-size: 20px;
+}
+
 .warningParagraph {
   color: red;
 }
@@ -99,7 +114,7 @@ export default {
     };
   },
   watch: {
-    addedFunction: function() {
+    addedFunction: function () {
       this.okDisable = !this.checkArgs();
     },
     args: {
@@ -108,10 +123,10 @@ export default {
         this.okDisable = !this.checkArgs();
       },
     },
-    color: function() {
+    color: function () {
       this.okDisable = !this.checkArgs();
     },
-    appliedFunctions: function() {
+    appliedFunctions: function () {
       this.okDisable = !this.checkArgs();
     },
   },
@@ -175,12 +190,20 @@ export default {
       this.$emit("add-analysing-function", func);
       this.addedFunction = null;
       this.args = {};
+      this.color = this.getRandomRGB();
     },
     wasColorAlreadyPicked() {
-      const colors = this.appliedFunctions
-        .map((func) => func.color)
+      const colors = this.appliedFunctions.map((func) => func.color);
 
-        return colors.includes(this.color);
+      return colors.includes(this.color);
+    },
+    getRandomRGB() {
+      return (
+        "#" +
+        Math.floor(Math.random() * 256 * 256 * 256 - 1)
+          .toString(16)
+          .padStart(6, "0")
+      );
     },
   },
   emits: ["add-analysing-function"],
