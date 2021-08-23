@@ -66,25 +66,26 @@ export default {
   },
   methods: {
     convertToOHLC(data) {
+      console.log(this.ohlcRecordRange);
       data.sort((a, b) => d3.ascending(a.date, b.date));
-      if (this.ohlcRecordRange === "minute") {
+      if (this.ohlcRecordRange === "Minute") {
         data.forEach(
           (d) => (d.date = d.date.slice(0, 17) + "30" + d.date.slice(19))
         );
-      } else if (this.ohlcRecordRange === "hour") {
+      } else if (this.ohlcRecordRange === "Hour") {
         data.forEach(
           (d) => (d.date = d.date.slice(0, 14) + "30:00" + d.date.slice(19))
         );
-      } else if (this.ohlcRecordRange === "day") {
+      } else if (this.ohlcRecordRange === "Day") {
         data.forEach(
           (d) => (d.date = d.date.slice(0, 11) + "12:00:00" + d.date.slice(19))
         );
-      } else if (this.ohlcRecordRange === "month") {
+      } else if (this.ohlcRecordRange === "Month") {
         data.forEach(
           (d) =>
             (d.date = d.date.slice(0, 8) + "15T00:00:00" + d.date.slice(19))
         );
-      } else if (this.ohlcRecordRange === "year") {
+      } else if (this.ohlcRecordRange === "Year") {
         data.forEach(
           (d) =>
             (d.date = d.date.slice(0, 5) + "07-01T00:00:00" + d.date.slice(19))

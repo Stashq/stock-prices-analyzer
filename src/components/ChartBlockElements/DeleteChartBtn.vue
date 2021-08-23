@@ -22,11 +22,16 @@
 
 <style scoped>
 .btn-delete-chart {
-  margin: 0px 0px 10px 18px;
+  margin: 0px 0px 10px 0px;
+  border-radius: 20px;
   border: 0px;
+  padding: 1px;
+  height: 40px;
+  width: 200px;
+  background-color: #aa2020;
   color: white;
-  background-color: rgba(200, 0, 0, 0.5);
-  border-radius: 10px;
+  overflow: hidden;
+  font-size: 20px;
 }
 </style>
 

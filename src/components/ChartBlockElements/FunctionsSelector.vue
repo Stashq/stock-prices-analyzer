@@ -1,11 +1,12 @@
 <template>
-  <div>
-    <b-button class="show-modal-btn" v-b-modal="chart_id.toString(2)"
-      >Add function</b-button
-    >
+  <div style="display: inline-block;">
+    <b-button class="show-modal-btn" v-b-modal="chartId.toString(2)">
+        <b><i>Add function </i></b>
+        <b-icon icon="plus-square"/>
+    </b-button>
 
     <b-modal
-      :id="chart_id.toString(2)"
+      :id="chartId.toString(2)"
       title="Choose function"
       :ok-disabled="okDisable"
       @ok="emitAddFunction"
@@ -53,16 +54,26 @@
 
 <style scoped>
 .show-modal-btn {
-  margin: 5px 0px;
+  display: inline-block;
+  margin: 3px 5px;
   border-radius: 5px;
+  padding: 5px;
+  border: none;
+  color: #6a0a7e69;
+  background-color: rgb(224, 224, 224);
+}
+
+.show-modal-btn:hover {
+  background-color: rgb(255, 255, 255);
+  color: #6b0a7e;
+}
+
+.function-remove-button {
+  color: rgb(216, 15, 15);
+  background-color: #6d3799c4;
+  padding: 5px;
   border: 0px;
-  padding: 1px;
-  height: 40px;
-  width: 25%;
-  background-color: #b44b4b;
-  color: white;
-  overflow: hidden;
-  font-size: 20px;
+  border-radius: 0px 4px 4px 0px;
 }
 
 .warningParagraph {
@@ -99,7 +110,7 @@ const constants = require("../../../data/constants.json");
 export default {
   name: "FunctionsSelector",
   props: {
-    chart_id: Number,
+    chartId: Number,
     appliedFunctions: Array,
   },
   data() {
@@ -110,7 +121,7 @@ export default {
       errorMessage: null,
       okDisable: true,
       alreadyAppliedMessage: false,
-      color: "#3C85C9",
+      color: null,
     };
   },
   watch: {
@@ -132,6 +143,7 @@ export default {
   },
   created: function () {
     //TODO: loading analysis functions and their setting from file
+    this.color = this.getRandomRGB();
     this.analysisFunctions = constants.analysisFunctions;
   },
   methods: {

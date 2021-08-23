@@ -3,39 +3,58 @@
     <ChartPickUpButton @chart-pick-up="$emit('chart-pick-up', chart.id)" />
 
     <div class="fullscreen-wraper" :style="fullscreenWraperStyle">
+      <button
+        class="minimize-chart-btn"
+        aria-label="Close"
+        @click="isMinimized = !isMinimized"
+      >
+        <i class="fas fa-window-minimize" aria-hidden="true">—</i>
+      </button>
+
       <button class="full-screen-btn" @click="fullScreen">
         <b-icon v-if="!isFullScreen" icon="fullscreen" />
         <b-icon v-if="isFullScreen" icon="fullscreen-exit" />
       </button>
 
-      <ChartTypeModifier @change-chart-type="changeChartType" />
+      <button
+        class="delete-chart-btn"
+        aria-label="Close"
+        @click="$emit('delete-chart', chart.id)"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
 
-      <OHLCRecordRangeSelector
-        @ohlc-record-range-changed="changeOhlcRecordRange"
-      />
+      <div v-if="!isMinimized">
+        <ChartTypeModifier @change-chart-type="changeChartType" />
 
-      <FunctionsSelector
-        :chart_id="chart.id"
-        :appliedFunctions="appliedFunctions"
-        @add-analysing-function="addAnalysingFunction"
-      />
+        <OHLCRecordRangeSelector
+          @ohlc-record-range-changed="changeOhlcRecordRange"
+        />
 
-      <AppliedFunctionsList
-        :appliedFunctions="appliedFunctions"
-        @remove-function="removeAnalysingFunction"
-      />
+        <AppliedFunctionsList
+          :chartId="chart.id"
+          :appliedFunctions="appliedFunctions"
+          @add-analysing-function="addAnalysingFunction"
+          @remove-function="removeAnalysingFunction"
+        />
 
-      <Chart
-        :chart="chart"
-        :chartType="chartType"
-        :appliedFunctions="appliedFunctions"
-        :addedFunction="addedFunction"
-        :removedFunction="removedFunction"
-        :ohlcRecordRange="ohlcRecordRange"
-        :layout="chartLayout"
-      />
-
-      <DeleteChartButton @delete-chart="$emit('delete-chart', chart.id)" />
+        <Chart
+          :chart="chart"
+          :chartType="chartType"
+          :appliedFunctions="appliedFunctions"
+          :addedFunction="addedFunction"
+          :removedFunction="removedFunction"
+          :ohlcRecordRange="ohlcRecordRange"
+          :layout="chartLayout"
+        />
+      </div>
+      <div v-if="isMinimized">
+        <h3 class="chartTitle">
+          <b>{{ chart.grain }}</b> {{
+            `: ${chart.start_date} - ${chart.end_date}`
+          }}
+        </h3>
+      </div>
     </div>
 
     <ChartPullDownButton
@@ -71,9 +90,6 @@
   text-align: right;
 }
 
-
-
-
 .chart-block {
   padding-right: 20px;
   background-color: #6d379969;
@@ -81,14 +97,29 @@
   border-radius: inherit;
 }
 
-.full-screen-btn {
+.full-screen-btn,
+.delete-chart-btn,
+.minimize-chart-btn {
   position: absolute;
-  right: 30px;
-  top: 40px;
+  top: 10px;
   background: transparent;
   transition: 0.2s ease-in-out 0s;
   border: 0px;
   color: rgb(211, 211, 211);
+}
+
+.delete-chart-btn {
+  right: 0px;
+  transform: scale(2.5);
+}
+
+.delete-chart-btn:hover {
+  transform: scale(3.5);
+  color: white;
+}
+
+.full-screen-btn {
+  right: 40px;
   transform: scale(1.5);
 }
 
@@ -96,16 +127,28 @@
   transform: scale(1.75);
   color: white;
 }
+
+.minimize-chart-btn {
+  right: 90px;
+  transform: scale(1.5);
+}
+
+.minimize-chart-btn:hover {
+  transform: scale(1.75);
+  color: white;
+}
+
+.chartTitle{
+    color: white;
+}
 </style>
 
 <script>
 import Chart from "./Chart.vue";
 import ChartPickUpButton from "./ChartBlockElements/ChartPickUpBtn.vue";
 import ChartPullDownButton from "./ChartBlockElements/ChartPullDownBtn.vue";
-import DeleteChartButton from "./ChartBlockElements/DeleteChartBtn.vue";
 import ChartTypeModifier from "./ChartBlockElements/ChartTypeModifier.vue";
 import OHLCRecordRangeSelector from "./ChartBlockElements/OHLCRecordRangeSelector.vue";
-import FunctionsSelector from "./ChartBlockElements/FunctionsSelector.vue";
 import AppliedFunctionsList from "./ChartBlockElements/AppliedFunctionsList.vue";
 
 import constants from "../../data/constants.json";
@@ -116,17 +159,15 @@ export default {
     Chart,
     ChartPickUpButton,
     ChartPullDownButton,
-    DeleteChartButton,
     ChartTypeModifier,
     OHLCRecordRangeSelector,
-    FunctionsSelector,
     AppliedFunctionsList,
   },
   data() {
     return {
       chartType: "line",
       appliedFunctions: [],
-      ohlcRecordRange: "day",
+      ohlcRecordRange: "Day",
       functionSelectorIsOpen: false,
       addedFunction: null,
       removedFunction: null,
@@ -141,6 +182,7 @@ export default {
       },
       isFullScreen: null,
       chartLayout: null,
+      isMinimized: false,
     };
   },
   created: function () {
