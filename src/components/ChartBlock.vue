@@ -34,25 +34,22 @@
 
       <div v-if="!isMinimized || isFullScreen">
         <ChartTypeModifier @change-chart-type="changeChartType" />
-
         <OHLCRecordRangeSelector
           @ohlc-record-range-changed="changeOhlcRecordRange"
         />
-
         <AppliedFunctionsList
           :chartId="chart.id"
-          :appliedFunctions="appliedFunctions"
+          :appliedFunctions="chart.appliedFunctions"
           @add-analysing-function="addAnalysingFunction"
           @remove-function="removeAnalysingFunction"
         />
-
         <Chart
           :chart="chart"
-          :chartType="chartType"
-          :appliedFunctions="appliedFunctions"
+          :chartType="chart.chartType"
+          :appliedFunctions="chart.appliedFunctions"
           :addedFunction="addedFunction"
           :removedFunction="removedFunction"
-          :ohlcRecordRange="ohlcRecordRange"
+          :ohlcRecordRange="chart.ohlcRecordRange"
           :layout="chartLayout"
         />
       </div>
@@ -155,12 +152,9 @@ export default {
   },
   data() {
     return {
-      chartType: "line",
-      appliedFunctions: [],
-      ohlcRecordRange: "Day",
-      functionSelectorIsOpen: false,
       addedFunction: null,
       removedFunction: null,
+      functionSelectorIsOpen: false,
       fullscreenWraperStyle: {
         position: "relative",
         height: "100%",
@@ -183,6 +177,20 @@ export default {
     chart: Object,
   },
   methods: {
+    changeChartType(chartType) {
+      this.$emit("change-chart-type", chartType, this.chart.id);
+    },
+    changeOhlcRecordRange(range) {
+      this.$emit("ohlc-record-range-changed", range, this.chart.id);
+    },
+    addAnalysingFunction(func) {
+      this.addedFunction = func;
+      this.$emit("add-analysing-function", func, this.chart.id);
+    },
+    removeAnalysingFunction(func) {
+      this.removedFunction = func;
+      this.$emit("remove-function", func, this.chart.id);
+    },
     fullScreen() {
       //TODO: dostosować Plotly do rozmiarów okna; strzałki w prawo i lewo
       if (!this.isFullScreen) {
@@ -210,23 +218,15 @@ export default {
         this.isFullScreen = false;
       }
     },
-    changeChartType(chartType) {
-      this.chartType = chartType;
-    },
-    changeOhlcRecordRange(range) {
-      this.ohlcRecordRange = range;
-    },
-    addAnalysingFunction(func) {
-      this.appliedFunctions = [...this.appliedFunctions, func];
-      this.addedFunction = func;
-    },
-    removeAnalysingFunction(func) {
-      this.appliedFunctions = this.appliedFunctions.filter(
-        (item) => item.name !== func.name
-      );
-      this.removedFunction = func;
-    },
   },
-  emits: ["delete-chart", "chart-pick-up", "chart-pull-down"],
+  emits: [
+    "delete-chart",
+    "chart-pick-up",
+    "chart-pull-down",
+    "change-chart-type",
+    "ohlc-record-range-changed",
+    "add-analysing-function",
+    "remove-function",
+  ],
 };
 </script>

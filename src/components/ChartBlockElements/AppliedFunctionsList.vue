@@ -21,7 +21,7 @@
     <FunctionsSelector
       :chartId="chartId"
       :appliedFunctions="appliedFunctions"
-      @add-analysing-function="$emit('add-analysing-function', $event)"
+      @add-analysing-function="addAnalysingFunction"
     />
   </div>
 </template>
@@ -67,6 +67,11 @@ export default {
   props: {
     chartId: Number,
     appliedFunctions: Array,
+  },
+  methods: {
+    addAnalysingFunction(func) {
+        this.$emit('add-analysing-function', func);
+    },
   },
   emits: ["remove-function", "add-analysing-function"],
 };

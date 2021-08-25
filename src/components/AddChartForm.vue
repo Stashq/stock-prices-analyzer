@@ -2,7 +2,7 @@
   <div class="form-container">
     <form
       id="addChart"
-      @submit.prevent="$emit('add-chart', start_date, end_date, selected_grain)"
+      @submit.prevent="$emit('add-chart', start_date, end_date, selected_commodity)"
     >
       <div class="variable-row-container">
         <span class="variable-name-span">Start date</span>
@@ -29,16 +29,16 @@
         </div>
       </div>
       <div class="variable-row-container">
-        <span class="variable-name-span">Grain</span>
+        <span class="variable-name-span">Commodity</span>
         <div class="inputs-container">
           <select
-            v-model="selected_grain"
+            v-model="selected_commodity"
             @change="validateInput"
-            class="form-el select-grain"
+            class="form-el select-commodity"
           >
-            <option value="" disabled selected>Select grain</option>
-            <option :key="grain" v-for="grain in available_grains">
-              {{ grain }}
+            <option value="" disabled selected>Select commodity</option>
+            <option :key="commodity" v-for="commodity in available_commodities">
+              {{ commodity }}
             </option>
           </select>
         </div>
@@ -80,7 +80,7 @@
   width: 33%;
 }
 
-.select-grain {
+.select-commodity {
   width: 100%;
   padding: 1px;
   height: 36px;
@@ -129,19 +129,19 @@ b-form-datepicker {
 export default {
   name: "AddChartForm",
   props: {
-    available_grains: [],
+    available_commodities: [],
   },
   data() {
     return {
       start_date: null,
       end_date: null,
-      selected_grain: null,
+      selected_commodity: null,
       isDisabled: true,
     };
   },
   methods: {
     validateInput() {
-      if (this.start_date && this.end_date && this.selected_grain) {
+      if (this.start_date && this.end_date && this.selected_commodity) {
         this.isDisabled = false;
       } else {
         this.isDisabled = true;

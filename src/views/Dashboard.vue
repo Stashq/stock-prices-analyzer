@@ -9,9 +9,16 @@
           @delete-chart="deleteChart"
           @chart-pick-up="pickUpChart"
           @chart-pull-down="pullDownChart"
+          @change-chart-type="changeChartType"
+          @ohlc-record-range-changed="changeOhlcRecordRange"
+          @add-analysing-function="addAnalysingFunction"
+          @remove-function="removeAnalysingFunction"
         />
       </div>
-      <AddChartForm :available_grains="available_grains" @add-chart="addChart" />
+      <AddChartForm
+        :available_commodities="available_commodities"
+        @add-chart="addChart"
+      />
     </main>
   </div>
 </template>
@@ -45,12 +52,39 @@ export default {
   data() {
     return {
       charts: [],
-      charts_counter: 0,
-      available_grains: constants.grains,
+      available_commodities: constants.commodities,
       user: null,
     };
   },
+  watch: {
+    charts: {
+      deep: true,
+      handler() {
+        console.log("jestem");
+        localStorage.setItem("dashboard_state", JSON.stringify(this.charts));
+      },
+    },
+  },
+  created: function () {
+    this.charts = JSON.parse(localStorage.getItem("dashboard_state"));
+  },
   methods: {
+    changeChartType(chartType, chartId) {
+      this.charts.find((chart) => chart.id === chartId).chartType = chartType;
+    },
+    changeOhlcRecordRange(range, chartId) {
+      this.charts.find((chart) => chart.id === chartId).ohlcRecordRange = range;
+    },
+    addAnalysingFunction(func, chartId) {
+      const chart = this.charts.find((chart) => chart.id === chartId);
+      chart.appliedFunctions = [...chart.appliedFunctions, func];
+    },
+    removeAnalysingFunction(func, chartId) {
+      const chart = this.charts.find((chart) => chart.id === chartId);
+      chart.appliedFunctions = chart.appliedFunctions.filter(
+        (item) => item.name !== func.name
+      );
+    },
     async addChart(start_date, end_date, grain) {
       this.$api
         .get(`/prices/${grain}`, {
@@ -62,14 +96,21 @@ export default {
         .then((res) => {
           // TODO: przejść z obserwacji na format json
           const data = JSON.parse(JSON.stringify(res.data))[grain];
+          let rand = Math.floor(Math.random() * 1000000);
+          const ids = this.charts.map((chart) => chart.id);
+          while (ids.includes(rand)) {
+            rand = Math.floor(Math.random() * 1000000);
+          }
           const newChart = {
-            id: this.charts_counter,
+            id: rand,
             grain: grain,
             data: data,
             start_date: start_date,
             end_date: end_date,
+            chartType: "line",
+            appliedFunctions: [],
+            ohlcRecordRange: "Day",
           };
-          this.charts_counter += 1;
           this.charts = [...this.charts, newChart];
         })
         .catch((err) => {
@@ -80,6 +121,7 @@ export default {
     deleteChart(id) {
       if (confirm("Are you sure?")) {
         this.charts = this.charts.filter((chart) => chart.id !== id);
+        localStorage.removeItem(`chart_${id}`);
       }
     },
     pickUpChart(id) {

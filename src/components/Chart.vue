@@ -43,12 +43,14 @@ export default {
     addedFunction: function () {
       const dates = this.chart.data.map((d) => d.date);
       const prices = this.chart.data.map((d) => d.price);
-      const funcExecutor = functionsExecutors.find(func => func.type == this.addedFunction.type);
+      const funcExecutor = functionsExecutors.find(
+        (func) => func.type == this.addedFunction.type
+      );
       const addedTraces = funcExecutor.getTraces(
-          dates,
-          prices,
-          this.addedFunction
-        );
+        dates,
+        prices,
+        this.addedFunction
+      );
 
       this.functionsTraces = [...this.functionsTraces, ...addedTraces];
       this.traces = [this.baseTrace, ...this.functionsTraces];
