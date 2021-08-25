@@ -4,33 +4,79 @@
     <main>
       <div class="wrapper fadeInDown">
         <div id="formContent">
-          <form id="Login" @submit="logIn">
-            <input
-              type="text"
-              v-model="login"
-              class="fadeIn second"
-              name="login"
-              placeholder="login"
-            />
-            <input
-              type="password"
-              v-model="password"
-              class="fadeIn third"
-              name="login"
-              placeholder="password"
-            />
-            <input type="submit" class="fadeIn fourth" value="Log In" />
+          <form id="Login" @submit="singIn">
+            <div>
+              <span class="input-description">First Name</span>
+              <input
+                required
+                type="text"
+                v-model="firstName"
+                class="fadeIn first"
+                name="firstName"
+                placeholder="Joe"
+              />
+            </div>
+            <div>
+              <span class="input-description">Last Name</span>
+              <input
+                required
+                type="text"
+                v-model="lastName"
+                class="fadeIn second"
+                name="lastName"
+                placeholder="Smith"
+              />
+            </div>
+            <div>
+              <span class="input-description">Email</span>
+              <input
+                required
+                type="email"
+                v-model="email"
+                class="fadeIn third"
+                name="email"
+                placeholder="example@mail.com"
+              />
+            </div>
+            <div>
+              <span class="input-description">Username</span>
+              <input
+                required
+                type="text"
+                v-model="username"
+                class="fadeIn fourth"
+                name="username"
+                placeholder="joe1984"
+              />
+            </div>
+            <div>
+              <span class="input-description">Password</span>
+              <input
+                required
+                type="password"
+                v-model="password"
+                class="fadeIn fifth"
+                name="password"
+                placeholder="password"
+              />
+            </div>
+            <div>
+              <span class="input-description">Repeat password</span>
+              <input
+                required
+                type="password"
+                v-model="passwordAgain"
+                class="fadeIn sixth"
+                name="passwordAgain"
+                placeholder="repeat password"
+              />
+            </div>
+            <input type="submit" class="fadeIn fourth" value="Sing in" />
           </form>
 
           <p style="color: red" id="error-message" v-show="error_info">
             {{ error_info }}
           </p>
-
-          <!-- Remind Passowrd -->
-          <div id="formFooter">
-            <a class="underlineHover fadeIn third" href="#">Forgot Password?</a>
-            <a class="underlineHover fadeIn third" href="/singin">Create account</a>
-          </div>
         </div>
       </div>
     </main>
@@ -38,7 +84,6 @@
 </template>
 
 <style scoped>
-
 a {
   color: #92badd;
   display: inline-block;
@@ -47,7 +92,7 @@ a {
   margin: 10px;
   padding: 10px;
   border: 2px solid #bdbdbd;
-  border-radius: 10px;;
+  border-radius: 10px;
   width: 40%;
 }
 
@@ -79,7 +124,7 @@ h2 {
   background: #fff;
   padding: 30px;
   width: 90%;
-  max-width: 450px;
+  max-width: 650px;
   position: relative;
   padding: 0px;
   -webkit-box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
@@ -149,7 +194,14 @@ input[type="reset"]:active {
   transform: scale(0.95);
 }
 
+.input-description {
+  display: inline-block;
+  width: 15%;
+  font-weight: 600;
+}
+
 input[type="text"],
+input[type="email"],
 input[type="password"] {
   background-color: #f6f6f6;
   border: none;
@@ -160,7 +212,7 @@ input[type="password"] {
   display: inline-block;
   font-size: 16px;
   margin: 5px;
-  width: 85%;
+  width: 65%;
   border: 2px solid #f6f6f6;
   -webkit-transition: all 0.5s ease-in-out;
   -moz-transition: all 0.5s ease-in-out;
@@ -172,12 +224,14 @@ input[type="password"] {
 }
 
 input[type="text"]:focus,
+input[type="email"]:focus,
 input[type="password"]:focus {
   background-color: #fff;
   border-bottom: 2px solid #5fbae9;
 }
 
 input[type="text"]:placeholder,
+input[type="email"]:placeholder,
 input[type="password"]:placeholder {
   color: #cccccc;
 }
@@ -285,6 +339,18 @@ input[type="password"]:placeholder {
   animation-delay: 1s;
 }
 
+.fadeIn.fifth {
+  -webkit-animation-delay: 1.2s;
+  -moz-animation-delay: 1.2s;
+  animation-delay: 1.2s;
+}
+
+.fadeIn.sixth {
+  -webkit-animation-delay: 1.4s;
+  -moz-animation-delay: 1.4s;
+  animation-delay: 1.4s;
+}
+
 /* Simple CSS3 Fade-in Animation */
 .underlineHover:after {
   display: block;
@@ -314,7 +380,6 @@ input[type="password"]:placeholder {
 </style>
 
 <script>
-import { stringify } from "querystringify";
 import Navbar from "../components/Navbar";
 
 export default {
@@ -324,44 +389,44 @@ export default {
   },
   data() {
     return {
-      login: null,
+      firstName: null,
+      lastName: null,
+      email: null,
+      username: null,
       password: null,
+      passwordAgain: null,
       error_info: null,
     };
   },
   methods: {
-    logIn: function (e) {
+    singIn: function (e) {
       e.preventDefault();
+
+      if (this.password !== this.passwordAgain) {
+        this.error_info = "Passwords are not the same.";
+        return false;
+      }
+      const account_fields = {
+        first_name: this.firstName,
+        last_name: this.lastName,
+        email: this.email,
+        username: this.username,
+        password_hash: this.password,
+      };
       this.$api
-        .post(
-          "/token",
-          stringify({
-            grant_type: null,
-            username: this.login,
-            password: this.password,
-            client_id: null,
-            client_secret: null,
-          })
-        )
-        .then((res) => {
+        .post("/users", account_fields)
+        .then(() => {
           this.error_info = null;
-          const token = `${res.data.token_type} ${res.data.access_token}`;
-          localStorage.setItem('token', token)
-          this.$api.defaults.headers.common[
-            "Authorization" 
-          ] = token
-          this.$router.push("home");
+          alert("Account has been created");
+          this.$router.push("/login");
         })
         .catch((err) => {
-          console.log(err)
           if (!err.response) {
-            // network error
-            console.log(err)
             this.error_info = "Connection refused. Please, try later.";
-          } else if (err.response.status == 500) {
+          } else if (err.response.status >= 500) {
             this.error_info = "Internal server error. Please, try later.";
           } else if (err.response.status >= 400) {
-            this.error_info = "Bad login or password.";
+            this.error_info = err.response.data["detail"];
           } else {
             this.error_info = null;
           }

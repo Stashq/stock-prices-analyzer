@@ -3,8 +3,8 @@
     <Navbar @sing-out="singOut()" />
     <Sidebar />
     <main>
-      <div class="home-container">
-        <h1>Wellcome in stock price analyzer!</h1>
+      <div class="tables-container">
+        <h1>At this moment, database administration is not avaible.</h1>
       </div>
     </main>
   </div>
@@ -15,7 +15,7 @@ main {
   margin-left: 290px;
 }
 
-.home-container {
+.tables-container {
   border-radius: 25px;
   margin: 10px 30px;
 }

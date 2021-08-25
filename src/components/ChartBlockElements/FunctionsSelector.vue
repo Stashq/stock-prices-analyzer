@@ -59,7 +59,7 @@
   border-radius: 5px;
   padding: 5px;
   border: none;
-  color: #6a0a7e69;
+  color: #6b0a7e;
   background-color: rgb(224, 224, 224);
 }
 
@@ -105,7 +105,7 @@
 </style>
 
 <script>
-const constants = require("../../../data/constants.json");
+import functionsExporter from "../../AnalysisFunctions/functionsExporter";
 
 export default {
   name: "FunctionsSelector",
@@ -144,7 +144,7 @@ export default {
   created: function () {
     //TODO: loading analysis functions and their setting from file
     this.color = this.getRandomRGB();
-    this.analysisFunctions = constants.analysisFunctions;
+    this.analysisFunctions = functionsExporter;
   },
   methods: {
     funcToString(type, args) {

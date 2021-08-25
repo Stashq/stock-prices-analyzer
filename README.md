@@ -1,4 +1,4 @@
-# vue-try2
+# stock-dashboard-analyzer
 
 ## Project setup
 ```

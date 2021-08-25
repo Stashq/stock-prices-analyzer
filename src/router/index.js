@@ -1,32 +1,56 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
+import Dashboard from "../views/Dashboard.vue";
 import axios from "axios";
 
 Vue.use(VueRouter);
 
 const routes = [
     {
-        path: "/home",
-        name: "Home",
-        component: Home,
+        path: "/dashboard",
+        name: "Dashboard",
+        component: Dashboard,
         meta: { requiresAuth: true }
     },
     {
-        path: "/about",
-        name: "About",
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
+        path: "/home",
+        name: "Home",
+        alias: '/',
         component: () =>
-            import(/* webpackChunkName: "about" */ "../views/About.vue"),
+            import(/* webpackChunkName: "home" */ "../views/Home.vue"),
+    },
+    {
+        path: "/tables",
+        name: "Tables",
+        component: () =>
+            import(/* webpackChunkName: "tables" */ "../views/Tables.vue"),
+        meta: { requiresAuth: true }
     },
     {
         path: "/login",
         name: "Login",
         component: () =>
-            import(/* webpackChunkName: "about" */ "../views/Login.vue"),
+            import(/* webpackChunkName: "login" */ "../views/Login.vue"),
     },
+    {
+        path: "/singin",
+        name: "SingIn",
+        component: () =>
+            import(/* webpackChunkName: "singin" */ "../views/SingIn.vue"),
+    },
+    {
+        path: "/singout",
+        name: "SingOut",
+        component: () =>
+            import(/* webpackChunkName: "singout" */ "../views/SingOut.vue"),
+    },
+    {
+        path: "*",
+        name: "PageNotFound",
+        component: () =>
+            import(/* webpackChunkName: "pagenotfound" */ "../views/PageNotFound.vue"),
+    },
+
 ];
 
 const router = new VueRouter({
@@ -58,8 +82,9 @@ router.beforeEach((to, from, next) => {
                     next({ name: "Login" });
                 }
             });
-    }
-    else {
+    } else if (to?.meta?.requiresAuth && !token) {
+        next({ name: "Login" });
+    } else {
         next();
     }
 });

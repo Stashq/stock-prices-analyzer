@@ -3,28 +3,36 @@
     <ChartPickUpButton @chart-pick-up="$emit('chart-pick-up', chart.id)" />
 
     <div class="fullscreen-wraper" :style="fullscreenWraperStyle">
-      <button
-        class="minimize-chart-btn"
-        aria-label="Close"
-        @click="isMinimized = !isMinimized"
-      >
-        <i class="fas fa-window-minimize" aria-hidden="true">—</i>
-      </button>
+      <div class="chart-bar">
+        <h3 class="chart-title">
+          <b>{{ chart.grain }}</b>
+          {{ `: ${chart.start_date} - ${chart.end_date}` }}
+        </h3>
+        <div class="bar-buttons-wraper">
+          <button
+            class="minimize-chart-btn"
+            aria-label="Close"
+            @click="isMinimized = !isMinimized"
+          >
+            <i class="fas fa-window-minimize" aria-hidden="true">—</i>
+          </button>
 
-      <button class="full-screen-btn" @click="fullScreen">
-        <b-icon v-if="!isFullScreen" icon="fullscreen" />
-        <b-icon v-if="isFullScreen" icon="fullscreen-exit" />
-      </button>
+          <button class="full-screen-btn" @click="fullScreen">
+            <b-icon v-if="!isFullScreen" icon="fullscreen" />
+            <b-icon v-if="isFullScreen" icon="fullscreen-exit" />
+          </button>
 
-      <button
-        class="delete-chart-btn"
-        aria-label="Close"
-        @click="$emit('delete-chart', chart.id)"
-      >
-        <span aria-hidden="true">&times;</span>
-      </button>
+          <button
+            class="delete-chart-btn"
+            aria-label="Close"
+            @click="$emit('delete-chart', chart.id)"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
 
-      <div v-if="!isMinimized">
+      <div v-if="!isMinimized || isFullScreen">
         <ChartTypeModifier @change-chart-type="changeChartType" />
 
         <OHLCRecordRangeSelector
@@ -48,13 +56,6 @@
           :layout="chartLayout"
         />
       </div>
-      <div v-if="isMinimized">
-        <h3 class="chartTitle">
-          <b>{{ chart.grain }}</b> {{
-            `: ${chart.start_date} - ${chart.end_date}`
-          }}
-        </h3>
-      </div>
     </div>
 
     <ChartPullDownButton
@@ -64,44 +65,31 @@
 </template>
 
 <style scoped>
-.variable-row-container {
-  width: 80%;
-  margin: 10px 0px 5px 0px;
-
-  display: inline-flex;
-  /* center items horizontally */
-  align-items: center;
-}
-
-.inputs-container {
-  width: 50%;
-  text-align: left;
-}
-
-.variable-name-span {
-  display: inline;
+.chart-bar {
+  background-color: rgba(3, 3, 31, 0.3);
+  width: 100%;
   color: white;
-  font-size: 40px;
-  height: 45px;
-  position: relative;
-  top: -10px;
-  left: -20px;
-  width: 30%;
-  text-align: right;
+  padding: 5px 0px;
 }
 
-.chart-block {
-  padding-right: 20px;
-  background-color: #6d379969;
-  overflow: hidden;
-  border-radius: inherit;
+.chart-title {
+  display: inline-block;
+  margin: auto;
+  position: center;
+  width: 70%;
+}
+
+.bar-buttons-wraper {
+  position: absolute;
+  right: 0px;
+  top: 10px;
 }
 
 .full-screen-btn,
 .delete-chart-btn,
 .minimize-chart-btn {
-  position: absolute;
-  top: 10px;
+  padding: 0px;
+  margin: 0px 10px;
   background: transparent;
   transition: 0.2s ease-in-out 0s;
   border: 0px;
@@ -138,8 +126,10 @@
   color: white;
 }
 
-.chartTitle{
-    color: white;
+.chart-block {
+  background-color: #6d379969;
+  overflow: hidden;
+  border-radius: inherit;
 }
 </style>
 
@@ -177,10 +167,10 @@ export default {
         width: "100%",
         left: "0px",
         top: "0px",
-        "background-image": null,
+        "background-color": "#6d379969",
         "z-index": 0,
       },
-      isFullScreen: null,
+      isFullScreen: false,
       chartLayout: null,
       isMinimized: false,
     };
@@ -188,10 +178,6 @@ export default {
   created: function () {
     this.chartLayout = constants.chart_layout.layout;
     this.chartLayout.range = [this.chart.start_date, this.chart.end_date];
-    this.chartLayout.title = {
-      text: `<b>${this.chart.grain}</b>: ${this.chart.start_date} - ${this.chart.end_date}`,
-      font: { size: 23 },
-    };
   },
   props: {
     chart: Object,
@@ -206,7 +192,7 @@ export default {
           width: "100%",
           left: "0px",
           top: "0px",
-          "background-image": "radial-gradient(#b44b4b, #9198e5)",
+          "background-color": "#824691",
           "z-index": 1,
         };
         this.isFullScreen = true;
@@ -218,6 +204,7 @@ export default {
           left: "0px",
           top: "0px",
           "background-image": null,
+          "background-color": "#6d379969",
           "z-index": 0,
         };
         this.isFullScreen = false;

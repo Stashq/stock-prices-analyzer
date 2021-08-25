@@ -93,6 +93,7 @@
             },
             "yaxis": {
                 "autorange": true,
+                "fixedrange": false,
                 "domain": [
                     0,
                     1

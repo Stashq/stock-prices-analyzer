@@ -53,6 +53,7 @@ select {
   color: white;
   overflow: hidden;
   font-size: 20px;
+  text-align-last: center;
 }
 </style>
 
@@ -62,7 +63,7 @@ export default {
   data() {
     return {
       ranges: ["Year", "Month", "Day", "Hour", "Minute"],
-      recordRange: "day",
+      recordRange: "Day",
     };
   },
   emits: ["ohlc-record-range-changed"],

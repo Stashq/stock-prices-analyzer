@@ -15,7 +15,7 @@
 <style scoped>
 .variable-row-container {
   width: 80%;
-  margin: 10px 0px 5px 0px;
+  margin: 5px 0px;
 
   display: inline-flex;
   /* center items horizontally */

@@ -1,21 +1,19 @@
 <template>
-      <div class=plot-container>
+  <div class="plot-container">
     <PlotlyChart :data="traces" :layout="layout" />
-      </div>
+  </div>
 </template>
 
 <style scoped>
 .plot-container {
-  margin: 5px 0px 0px 0px;
+  margin: 5px 20px 0px 0px;
 }
 </style>
 
 <script>
 import PlotlyChart from "./Charts/Plotly.vue";
 import * as d3 from "d3";
-import {
-  ma, // dma, ema, sma, wma
-} from "moving-averages";
+import functionsExecutors from "../AnalysisFunctions/functionsExporter";
 
 export default {
   name: "Chart",
@@ -43,11 +41,17 @@ export default {
       this.plotChart();
     },
     addedFunction: function () {
-      if (this.addedFunction.type === "moving average") {
-        this.addSimpleMovingAverage(this.addedFunction);
-      } else if (this.addedFunction.type === "moving average envelope") {
-        this.addSimpleMovingAverageEnvelope(this.addedFunction);
-      }
+      const dates = this.chart.data.map((d) => d.date);
+      const prices = this.chart.data.map((d) => d.price);
+      const funcExecutor = functionsExecutors.find(func => func.type == this.addedFunction.type);
+      const addedTraces = funcExecutor.getTraces(
+          dates,
+          prices,
+          this.addedFunction
+        );
+
+      this.functionsTraces = [...this.functionsTraces, ...addedTraces];
+      this.traces = [this.baseTrace, ...this.functionsTraces];
     },
     removedFunction: function () {
       this.traces = this.traces.filter(
@@ -66,7 +70,6 @@ export default {
   },
   methods: {
     convertToOHLC(data) {
-      console.log(this.ohlcRecordRange);
       data.sort((a, b) => d3.ascending(a.date, b.date));
       if (this.ohlcRecordRange === "Minute") {
         data.forEach(
@@ -166,58 +169,6 @@ export default {
       };
 
       this.baseTrace = trace;
-      this.traces = [this.baseTrace, ...this.functionsTraces];
-    },
-    addSimpleMovingAverage(func) {
-      //TODO: validate length of timeseries and period
-      const prices = this.chart.data.map((d) => d.price);
-      const movingAverage = ma(prices, func.args.period);
-      const dates = this.chart.data
-        .slice(this.chart.data.length - movingAverage.length)
-        .map((d) => d.date);
-
-      const trace = {
-        funcName: func.name,
-        type: "scatter",
-        mode: "lines",
-        name: `MA (${func.args.period})`,
-        x: dates,
-        y: movingAverage,
-        line: { color: func.color },
-      };
-
-      this.functionsTraces = [...this.functionsTraces, trace];
-      this.traces = [this.baseTrace, ...this.functionsTraces];
-    },
-    addSimpleMovingAverageEnvelope(func) {
-      //TODO: validate length of timeseries and period
-      const prices = this.chart.data.map((d) => d.price);
-      const movingAverage = ma(prices, func.args.period);
-      const dates = this.chart.data
-        .slice(this.chart.data.length - movingAverage.length)
-        .map((d) => d.date);
-
-      var lowerTrace = {
-        funcName: func.name,
-        x: dates,
-        y: movingAverage.map((item) => item * (1 - 0.01 * func.args.precent)),
-        fill: null,
-        name: `MA_low(${func.args.period}, -${func.args.precent})`,
-        type: "scatter",
-        line: { color: func.color },
-      };
-
-      var upperTrace = {
-        funcName: func.name,
-        x: dates,
-        y: movingAverage.map((item) => item * (1 + 0.01 * func.args.precent)),
-        fill: "tonexty",
-        name: `MA_high(${func.args.period}, +${func.args.precent})`,
-        type: "scatter",
-        line: { color: func.color },
-      };
-
-      this.functionsTraces = [...this.functionsTraces, lowerTrace, upperTrace];
       this.traces = [this.baseTrace, ...this.functionsTraces];
     },
   },
