@@ -41,19 +41,7 @@ export default {
       this.plotChart();
     },
     addedFunction: function () {
-      const dates = this.chart.data.map((d) => d.date);
-      const prices = this.chart.data.map((d) => d.price);
-      const funcExecutor = functionsExecutors.find(
-        (func) => func.type == this.addedFunction.type
-      );
-      const addedTraces = funcExecutor.getTraces(
-        dates,
-        prices,
-        this.addedFunction
-      );
-
-      this.functionsTraces = [...this.functionsTraces, ...addedTraces];
-      this.traces = [this.baseTrace, ...this.functionsTraces];
+        this.addAnalyticFunction(this.addedFunction);
     },
     removedFunction: function () {
       this.traces = this.traces.filter(
@@ -69,8 +57,26 @@ export default {
   },
   created: function () {
     this.plotChart();
+    this.appliedFunctions.forEach((func) => {
+        this.addAnalyticFunction(func);
+    });
   },
   methods: {
+    addAnalyticFunction(addedFunction) {
+      const dates = this.chart.data.map((d) => d.date);
+      const prices = this.chart.data.map((d) => d.price);
+      const funcExecutor = functionsExecutors.find(
+        (func) => func.type == addedFunction.type
+      );
+      const addedTraces = funcExecutor.getTraces(
+        dates,
+        prices,
+        addedFunction
+      );
+
+      this.functionsTraces = [...this.functionsTraces, ...addedTraces];
+      this.traces = [this.baseTrace, ...this.functionsTraces];
+    },
     convertToOHLC(data) {
       data.sort((a, b) => d3.ascending(a.date, b.date));
       if (this.ohlcRecordRange === "Minute") {

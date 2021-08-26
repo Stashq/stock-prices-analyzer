@@ -1,13 +1,12 @@
 <template>
   <div class="variable-row-container">
-      <!-- <div class="container"> -->
     <span class="variable-name-span">Chart type</span>
     <div class="inputs-container">
-    <button @click="$emit('change-chart-type', 'line')">Line</button>
-    <button @click="$emit('change-chart-type', 'ohlc')">OHLC</button>
-    <button @click="$emit('change-chart-type', 'candlestick')">
-      Candlestick
-    </button>
+      <button @click="$emit('change-chart-type', 'line')">Line</button>
+      <button @click="$emit('change-chart-type', 'ohlc')">OHLC</button>
+      <button @click="$emit('change-chart-type', 'candlestick')">
+        Candlestick
+      </button>
     </div>
   </div>
 </template>
@@ -21,7 +20,6 @@
   /* center items horizontally */
   align-items: center;
 }
-
 
 .inputs-container {
   width: 50%;

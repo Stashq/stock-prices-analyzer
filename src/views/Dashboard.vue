@@ -60,7 +60,6 @@ export default {
     charts: {
       deep: true,
       handler() {
-        console.log("jestem");
         localStorage.setItem("dashboard_state", JSON.stringify(this.charts));
       },
     },
@@ -87,14 +86,13 @@ export default {
     },
     async addChart(start_date, end_date, grain) {
       this.$api
-        .get(`/prices/${grain}`, {
+        .get(`/commodities/${grain}`, {
           params: {
             start_date: start_date,
             end_date: end_date,
           },
         })
         .then((res) => {
-          // TODO: przejść z obserwacji na format json
           const data = JSON.parse(JSON.stringify(res.data))[grain];
           let rand = Math.floor(Math.random() * 1000000);
           const ids = this.charts.map((chart) => chart.id);
