@@ -69,6 +69,7 @@ export default {
       const funcExecutor = functionsExecutors.find(
         (func) => func.type == addedFunction.type
       );
+      
       const addedTraces = funcExecutor.getTraces(
         dates,
         prices,

@@ -1,8 +1,8 @@
 <template>
-  <div style="display: inline-block;">
+  <div class="function-selector">
     <b-button class="show-modal-btn" v-b-modal="chartId.toString(2)">
-        <b><i>Add function </i></b>
-        <b-icon icon="plus-square"/>
+      <b><i>Add function </i></b>
+      <b-icon icon="plus-square" />
     </b-button>
 
     <b-modal
@@ -53,12 +53,24 @@
 </template>
 
 <style scoped>
+.function-selector {
+  position: absolute;
+  z-index: 1;
+  width: 200px;
+  top: -20px;
+  left: calc(50% - 100px);
+}
+
 .show-modal-btn {
-  display: inline-block;
-  margin: 3px 5px;
+  font-size: 17px;
+  height: 25px;
+  width: 150px;
+  padding: 1px;
+  margin: 0px 10px;
   border-radius: 5px;
-  padding: 5px;
-  border: none;
+  border: 0px;
+
+  display: inline-block;
   color: #6b0a7e;
   background-color: rgb(224, 224, 224);
 }

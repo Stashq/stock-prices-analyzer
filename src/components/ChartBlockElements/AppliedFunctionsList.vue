@@ -17,12 +17,6 @@
         <b-icon icon="x-square-fill" />
       </button>
     </div>
-
-    <FunctionsSelector
-      :chartId="chartId"
-      :appliedFunctions="appliedFunctions"
-      @add-analysing-function="addAnalysingFunction"
-    />
   </div>
 </template>
 
@@ -31,7 +25,7 @@
   padding: 10px;
   background-color: #b84f1f69;
   width: calc(100% - 60px);
-  max-height: 120px;
+  height: 120px;
   margin: 10px auto;
   border-radius: 5px;
   overflow-y: scroll;
@@ -80,13 +74,9 @@
 </style>
 
 <script>
-import FunctionsSelector from "./FunctionsSelector.vue";
 
 export default {
   name: "AppliedFunctionsList",
-  components: {
-    FunctionsSelector,
-  },
   props: {
     chartId: Number,
     appliedFunctions: Array,

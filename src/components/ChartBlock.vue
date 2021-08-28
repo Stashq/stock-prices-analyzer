@@ -1,6 +1,6 @@
 <template>
   <div class="chart-block">
-    <ChartPickUpButton @chart-pick-up="$emit('chart-pick-up', chart.id)"/>
+    <ChartPickUpButton @chart-pick-up="$emit('chart-pick-up', chart.id)" />
 
     <div id="full-screen-wraper" :style="fullScreenWraperStyle">
       <div class="chart-bar">
@@ -40,6 +40,11 @@
           @remove-function="removeAnalysingFunction"
         />
         <div class="chart-with-buttons">
+          <FunctionsSelector
+            :chartId="chart.id"
+            :appliedFunctions="chart.appliedFunctions"
+            @add-analysing-function="addAnalysingFunction"
+          />
           <SelectsBlock
             @ohlc-record-range-changed="changeOhlcRecordRange"
             @change-chart-type="changeChartType"
@@ -67,8 +72,8 @@
 
 <style scoped>
 .chart-with-buttons {
-    position: relative;
-    height: calc(100% - 240px);
+  position: relative;
+  height: calc(100% - 165px);
 }
 
 .chart-content {
@@ -151,6 +156,7 @@ import ChartPickUpButton from "./ChartBlockElements/ChartPickUpBtn.vue";
 import ChartPullDownButton from "./ChartBlockElements/ChartPullDownBtn.vue";
 import SelectsBlock from "./ChartBlockElements/SelectsBlock.vue";
 import AppliedFunctionsList from "./ChartBlockElements/AppliedFunctionsList.vue";
+import FunctionsSelector from "./ChartBlockElements/FunctionsSelector.vue";
 
 import constants from "../../data/constants.json";
 
@@ -162,6 +168,7 @@ export default {
     ChartPullDownButton,
     SelectsBlock,
     AppliedFunctionsList,
+    FunctionsSelector,
   },
   data() {
     return {
@@ -210,7 +217,6 @@ export default {
         this.fullScreenWraperStyle = {
           position: "fixed",
           height: "100%",
-          width: "100%",
           left: "0px",
           top: "0px",
           "background-color": "#824691",
@@ -221,8 +227,7 @@ export default {
       } else {
         this.fullScreenWraperStyle = {
           position: "relative",
-          height: "100%",
-          width: "100%",
+          height: "650px",
           left: "0px",
           top: "0px",
           "background-image": null,

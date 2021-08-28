@@ -40,15 +40,16 @@
 }
 
 select {
+  font-size: 20px;
+  height: 25px;
+  width: 150px;
+  padding: 1px;
   margin: 0px 10px;
   border-radius: 5px;
   border: 0px;
-  padding: 1px;
-  width: 150px;
+
   background-color: #b44b4b;
   color: white;
-  overflow: hidden;
-  font-size: 20px;
   text-align-last: center;
 }
 
