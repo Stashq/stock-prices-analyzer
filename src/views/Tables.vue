@@ -287,7 +287,13 @@ export default {
         this.commodities = res.data;
       })
       .catch((err) => {
-        console.log(err);
+        if (err.response.status === 403) {
+          alert("Not enough permissions");
+          this.$router.push("/home");
+          return Promise.resolve(err.response);
+        } else {
+          console.log(err);
+        }
       });
   },
   methods: {
@@ -392,14 +398,14 @@ export default {
       this.inputFileBlockStyle = {
         "background-color": "#d35757",
         border: "2px solid rgb(240, 240, 240)",
-      }
+      };
     },
     dragleave() {
       // Clean up
       this.inputFileBlockStyle = {
         "background-color": "#b44b4b",
         border: "2px solid rgb(226, 226, 226)",
-      }
+      };
     },
     drop(event) {
       event.preventDefault();
@@ -408,7 +414,7 @@ export default {
       this.inputFileBlockStyle = {
         "background-color": "#b44b4b",
         border: "2px solid rgb(226, 226, 226)",
-      }
+      };
     },
   },
 };

@@ -28,12 +28,35 @@
 
 <style scoped>
 .functions-list-block {
-  padding: 20px;
+  padding: 10px;
   background-color: #b84f1f69;
-  width: 80%;
+  width: calc(100% - 60px);
+  max-height: 120px;
   margin: 10px auto;
-  border-radius: 10px;
+  border-radius: 5px;
+  overflow-y: scroll;
 }
+
+.functions-list-block::-webkit-scrollbar-track
+{
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  border-radius: 10px;
+  background-color: #00000000;
+}
+
+.functions-list-block::-webkit-scrollbar
+{
+  width: 12px;
+  background-color: #00000000;
+}
+
+.functions-list-block::-webkit-scrollbar-thumb
+{
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+  background-color: #7272728c;
+}
+
 
 .functions-list-el {
   display: inline-block;

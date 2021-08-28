@@ -63,6 +63,7 @@
   background-color: #6d379969;
   color: white;
   width: 45%;
+  min-width: 430px;
 }
 
 .form-el {

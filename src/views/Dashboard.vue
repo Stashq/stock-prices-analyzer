@@ -25,12 +25,13 @@
 
 <style scoped>
 main {
-  margin-left: 290px;
+  margin-left: 310px;
+  margin-right: 10px;
 }
 
 .dashboard-container {
   border-radius: 25px;
-  margin: 10px 30px;
+  margin: 10px 0px;
 }
 </style>
 
@@ -66,10 +67,19 @@ export default {
   },
   created: function () {
     this.charts = JSON.parse(localStorage.getItem("dashboard_state"));
+    this.$api.get("/commodities/all/names")
+    .then((res) => {
+        this.available_commodities = res.data;
+    })
+    .catch((err) => {
+        // TODO: error handle
+        console.log(err);
+    })
   },
   methods: {
     changeChartType(chartType, chartId) {
       this.charts.find((chart) => chart.id === chartId).chartType = chartType;
+      console.log(this.charts)
     },
     changeOhlcRecordRange(range, chartId) {
       this.charts.find((chart) => chart.id === chartId).ohlcRecordRange = range;
@@ -105,7 +115,7 @@ export default {
             data: data,
             start_date: start_date,
             end_date: end_date,
-            chartType: "line",
+            chartType: constants["chart_types"][0],
             appliedFunctions: [],
             ohlcRecordRange: "Day",
           };

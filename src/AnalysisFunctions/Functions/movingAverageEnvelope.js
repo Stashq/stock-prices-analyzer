@@ -20,7 +20,7 @@ movingAverage.getTraces = function (input_x, input_y, func) {
         x: input_x,
         y: y.map((item) => item * (1 - 0.01 * func.args.precent)),
         fill: null,
-        name: `MA_low(${func.args.period}, -${func.args.precent})`,
+        name: `MA_low(${func.args.period}, ${func.args.precent})`,
         type: "scatter",
         line: { "color": func.color },
       };
@@ -30,7 +30,7 @@ movingAverage.getTraces = function (input_x, input_y, func) {
         x: input_x,
         y: y.map((item) => item * (1 + 0.01 * func.args.precent)),
         fill: "tonexty",
-        name: `MA_high(${func.args.period}, +${func.args.precent})`,
+        name: `MA_high(${func.args.period}, ${func.args.precent})`,
         type: "scatter",
         line: { "color": func.color },
       };

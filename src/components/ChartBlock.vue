@@ -1,8 +1,8 @@
 <template>
   <div class="chart-block">
-    <ChartPickUpButton @chart-pick-up="$emit('chart-pick-up', chart.id)" />
+    <ChartPickUpButton @chart-pick-up="$emit('chart-pick-up', chart.id)"/>
 
-    <div class="fullscreen-wraper" :style="fullscreenWraperStyle">
+    <div id="full-screen-wraper" :style="fullScreenWraperStyle">
       <div class="chart-bar">
         <h3 class="chart-title">
           <b>{{ chart.grain }}</b>
@@ -32,26 +32,30 @@
         </div>
       </div>
 
-      <div v-if="!isMinimized || isFullScreen">
-        <ChartTypeModifier @change-chart-type="changeChartType" />
-        <OHLCRecordRangeSelector
-          @ohlc-record-range-changed="changeOhlcRecordRange"
-        />
+      <div class="chart-content" v-if="!isMinimized">
         <AppliedFunctionsList
           :chartId="chart.id"
           :appliedFunctions="chart.appliedFunctions"
           @add-analysing-function="addAnalysingFunction"
           @remove-function="removeAnalysingFunction"
         />
-        <Chart
-          :chart="chart"
-          :chartType="chart.chartType"
-          :appliedFunctions="chart.appliedFunctions"
-          :addedFunction="addedFunction"
-          :removedFunction="removedFunction"
-          :ohlcRecordRange="chart.ohlcRecordRange"
-          :layout="chartLayout"
-        />
+        <div class="chart-with-buttons">
+          <SelectsBlock
+            @ohlc-record-range-changed="changeOhlcRecordRange"
+            @change-chart-type="changeChartType"
+            :chartType="chart.chartType"
+            :recordRange="chart.ohlcRecordRange"
+          />
+          <Chart
+            :chart="chart"
+            :chartType="chart.chartType"
+            :appliedFunctions="chart.appliedFunctions"
+            :addedFunction="addedFunction"
+            :removedFunction="removedFunction"
+            :ohlcRecordRange="chart.ohlcRecordRange"
+            :layout="chartLayout"
+          />
+        </div>
       </div>
     </div>
 
@@ -62,9 +66,19 @@
 </template>
 
 <style scoped>
+.chart-with-buttons {
+    position: relative;
+    height: calc(100% - 240px);
+}
+
+.chart-content {
+  height: 100%;
+}
+
 .chart-bar {
   background-color: rgba(3, 3, 31, 0.3);
   width: 100%;
+  height: 45px;
   color: white;
   padding: 5px 0px;
 }
@@ -127,6 +141,7 @@
   background-color: #6d379969;
   overflow: hidden;
   border-radius: inherit;
+  min-width: 1050px;
 }
 </style>
 
@@ -134,8 +149,7 @@
 import Chart from "./Chart.vue";
 import ChartPickUpButton from "./ChartBlockElements/ChartPickUpBtn.vue";
 import ChartPullDownButton from "./ChartBlockElements/ChartPullDownBtn.vue";
-import ChartTypeModifier from "./ChartBlockElements/ChartTypeModifier.vue";
-import OHLCRecordRangeSelector from "./ChartBlockElements/OHLCRecordRangeSelector.vue";
+import SelectsBlock from "./ChartBlockElements/SelectsBlock.vue";
 import AppliedFunctionsList from "./ChartBlockElements/AppliedFunctionsList.vue";
 
 import constants from "../../data/constants.json";
@@ -146,8 +160,7 @@ export default {
     Chart,
     ChartPickUpButton,
     ChartPullDownButton,
-    ChartTypeModifier,
-    OHLCRecordRangeSelector,
+    SelectsBlock,
     AppliedFunctionsList,
   },
   data() {
@@ -155,7 +168,7 @@ export default {
       addedFunction: null,
       removedFunction: null,
       functionSelectorIsOpen: false,
-      fullscreenWraperStyle: {
+      fullScreenWraperStyle: {
         position: "relative",
         height: "100%",
         width: "100%",
@@ -169,12 +182,12 @@ export default {
       isMinimized: false,
     };
   },
+  props: {
+    chart: Object,
+  },
   created: function () {
     this.chartLayout = constants.chart_layout.layout;
     this.chartLayout.range = [this.chart.start_date, this.chart.end_date];
-  },
-  props: {
-    chart: Object,
   },
   methods: {
     changeChartType(chartType) {
@@ -194,7 +207,7 @@ export default {
     fullScreen() {
       //TODO: dostosować Plotly do rozmiarów okna; strzałki w prawo i lewo
       if (!this.isFullScreen) {
-        this.fullscreenWraperStyle = {
+        this.fullScreenWraperStyle = {
           position: "fixed",
           height: "100%",
           width: "100%",
@@ -203,9 +216,10 @@ export default {
           "background-color": "#824691",
           "z-index": 1,
         };
+        this.isMinimized = false;
         this.isFullScreen = true;
       } else {
-        this.fullscreenWraperStyle = {
+        this.fullScreenWraperStyle = {
           position: "relative",
           height: "100%",
           width: "100%",

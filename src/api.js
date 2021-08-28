@@ -19,8 +19,7 @@ api.interceptors.response.use(
         // network error
         alert("Internal server error. Please try later.");
         return Promise.reject(err);
-    }
-    else if (err.response.status === 401) {
+    } else if (err.response.status === 401) {
       api.defaults.headers.common["Authorization"] = null;
       localStorage.removeItem("token");
       router.push("/login");

@@ -7,6 +7,12 @@
   />
 </template>
 
+<style soped>
+.js-plotly-plot {
+    height: 100%;
+}
+</style>
+
 <script>
 import { Plotly } from "vue-plotly";
 
@@ -21,7 +27,7 @@ export default {
   },
   data() {
     return {
-      options: {},
+      options: {responsive: true},
     };
   },
 };

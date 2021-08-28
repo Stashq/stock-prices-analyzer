@@ -7,6 +7,7 @@
 <style scoped>
 .plot-container {
   margin: 5px 20px 0px 0px;
+  height: 100%;
 }
 </style>
 
@@ -123,11 +124,11 @@ export default {
           price: item.price,
         };
       });
-      if (this.chartType === "candlestick") {
+      if (this.chartType === "Candlestick") {
         this.plotOHLC(data, this.chartType);
-      } else if (this.chartType === "ohlc") {
+      } else if (this.chartType === "OHLC") {
         this.plotOHLC(data, this.chartType);
-      } else if (this.chartType === "line") {
+      } else if (this.chartType === "Line") {
         this.plotLine(data);
       } else {
         throw `Unknown chart type - "${this.chartType}".`;
@@ -148,9 +149,9 @@ export default {
       this.traces = [this.baseTrace, ...this.functionsTraces];
     },
     plotOHLC(data, chartType) {
-      if (!chartType || !["candlestick", "ohlc"].includes(chartType)) {
-        throw `Unknown OHLC type - "${chartType}".`;
-      }
+    //   if (!chartType.toLowerCase() || !["candlestick", "ohlc"].includes(chartType)) {
+    //     throw `Unknown OHLC type - "${chartType.toLowerCase()}".`;
+    //   }
       const ohlc_data = this.convertToOHLC(data);
       const trace = {
         x: ohlc_data.map((item) => item.date),
@@ -171,7 +172,7 @@ export default {
 
         funcName: "base data",
         name: "Prices",
-        type: chartType,
+        type: chartType.toLowerCase(),
         xaxis: "x",
         yaxis: "y",
       };

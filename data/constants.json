@@ -8,6 +8,14 @@
         "sugar",
         "wheat"
     ],
+    "chart_types": [
+        "Line",
+        "OHLC",
+        "Candlestick"
+    ],
+    "record_ranges": [
+        "Year", "Month", "Day", "Hour", "Minute"
+    ],
     "analysisFunctions": [
         {
             "type": "moving average",
@@ -34,6 +42,7 @@
     ],
     "chart_layout": {
         "layout": {
+            "autosize": true,
             "dragmode": "zoom",
             "font": {
                 "color": "white"
