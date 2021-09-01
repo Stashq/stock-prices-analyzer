@@ -3,6 +3,11 @@
     <Navbar @sing-out="singOut()" />
     <Sidebar />
     <main>
+      <!-- <button v-on:click="shuffle">Shuffle</button>
+        <li v-for="item in items" v-bind:key="item">
+          {{ item }}
+        </li> -->
+      <transition-group name="flip-list" tag="ul">
       <div :key="chart.id" v-for="chart in charts" class="dashboard-container">
         <ChartBlock
           :chart="chart"
@@ -15,6 +20,7 @@
           @remove-function="removeAnalysingFunction"
         />
       </div>
+      </transition-group>
       <div>
         <AddChartForm
           :available_commodities="available_commodities"
@@ -31,6 +37,10 @@
 </template>
 
 <style lang="scss" scoped>
+.flip-list-move {
+  transition: transform 1s;
+}
+
 main {
   margin-left: 310px;
   margin-right: 10px;
@@ -47,6 +57,7 @@ import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/Sidebar.vue";
 import ChartBlock from "../components/ChartBlock.vue";
 import AddChartForm from "../components/AddChartForm.vue";
+import _ from 'lodash';
 
 const constants = require("../../data/constants.json");
 
@@ -59,6 +70,7 @@ export default {
   },
   data() {
     return {
+      items: [1, 2, 3, 4, 5, 6, 7],
       charts: [],
       available_commodities: constants.commodities,
       user: null,
@@ -73,7 +85,10 @@ export default {
     },
   },
   created: function () {
-    this.charts = JSON.parse(localStorage.getItem("dashboard_state"));
+    const charts = JSON.parse(localStorage.getItem("dashboard_state"));
+    if (charts) {
+      this.charts = charts;
+    }
     this.$api
       .get("/commodities/all/names")
       .then((res) => {
@@ -85,6 +100,9 @@ export default {
       });
   },
   methods: {
+    shuffle: function () {
+      this.items = _.shuffle(this.items);
+    },
     changeChartType(chartType, chartId) {
       this.charts.find((chart) => chart.id === chartId).chartType = chartType;
       console.log(this.charts);

@@ -20,7 +20,7 @@
   </button>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .btn-delete-chart {
   margin: 0px 0px 10px 0px;
   border-radius: 20px;
@@ -28,7 +28,7 @@
   padding: 1px;
   height: 40px;
   width: 200px;
-  background-color: #aa2020;
+  background-color: $theme1-color16;
   color: white;
   overflow: hidden;
   font-size: 20px;

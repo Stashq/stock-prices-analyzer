@@ -20,7 +20,7 @@
     </button>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .bi-chevron-compact-up {
   transform: scale(2.5, 1.5);
   color: white;
@@ -28,7 +28,7 @@
 
 .btn-chart-position-control {
   width: calc(100% + 20px);
-  background-color: #64077769;
+  background-color: $theme1-color4;
   border: 0px;
   color: white;
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="plot-container">
+  <div :style="`height: ${height};`" class="plot-container">
     <PlotlyChart :data="traces" :layout="layout" />
   </div>
 </template>
@@ -7,7 +7,7 @@
 <style scoped>
 .plot-container {
   margin: 5px 20px 0px 0px;
-  height: calc(100% - 30px);
+  /* height: calc(100% - 150px); */
 }
 </style>
 
@@ -36,6 +36,7 @@ export default {
     addedFunction: Object,
     removedFunction: Object,
     layout: Object,
+    height: String,
   },
   watch: {
     chartType: function () {
@@ -77,7 +78,7 @@ export default {
       );
 
       this.functionsTraces = [...this.functionsTraces, ...addedTraces];
-      this.traces = [this.baseTrace, ...this.functionsTraces];
+      this.traces = [...this.functionsTraces, this.baseTrace];
     },
     convertToOHLC(data) {
       data.sort((a, b) => d3.ascending(a.date, b.date));
@@ -147,7 +148,7 @@ export default {
       };
 
       this.baseTrace = trace;
-      this.traces = [this.baseTrace, ...this.functionsTraces];
+      this.traces = [...this.functionsTraces, this.baseTrace];
     },
     plotOHLC(data, chartType) {
     //   if (!chartType.toLowerCase() || !["candlestick", "ohlc"].includes(chartType)) {
@@ -179,7 +180,7 @@ export default {
       };
 
       this.baseTrace = trace;
-      this.traces = [this.baseTrace, ...this.functionsTraces];
+      this.traces = [...this.functionsTraces, this.baseTrace];
     },
   },
   emits: ["delete-chart", "chart-pick-up", "chart-pull-down"],

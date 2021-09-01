@@ -26,7 +26,7 @@
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .selects-block {
     position: absolute;
     right: 20px;
@@ -48,14 +48,14 @@ select {
   border-radius: 5px;
   border: 0px;
 
-  background-color: #b44b4b;
+  background-color: $theme1-color7;
   color: white;
   text-align-last: center;
 }
 
 option:disabled {
   color: rgb(241, 241, 241);
-  background-color: #9b4141;
+  background-color: $theme1-color13;
 }
 </style>
 

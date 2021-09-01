@@ -21,7 +21,7 @@
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 #list-placeholder {
     font-style: italic;
     color: #64311abd;
@@ -30,7 +30,7 @@
 .functions-list-block {
   border: 2px solid #eeeeee69;
   padding: 10px;
-  background-color: #b84f1f69;
+  background-color: $theme1-color5;
   width: calc(100% - 60px);
   height: 120px;
   margin: 10px auto;
@@ -69,7 +69,7 @@
 
 .function-remove-button {
   color: rgb(216, 15, 15);
-  background-color: #6d3799c4;
+  background-color: $theme1-color15;
   padding: 5px;
   border: 0px;
   border-radius: 0px 4px 4px 0px;

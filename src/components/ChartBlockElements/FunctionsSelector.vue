@@ -52,7 +52,7 @@
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .function-selector {
   position: absolute;
   z-index: 1;
@@ -70,18 +70,18 @@
   border: 0px;
 
   display: inline-block;
-  color: #6b0a7e;
+  color: $theme1-color14;
   background-color: rgb(224, 224, 224);
 }
 
 .show-modal-btn:hover {
   background-color: rgb(255, 255, 255);
-  color: #6b0a7e;
+  color: $theme1-color14;
 }
 
 .function-remove-button {
-  color: rgb(216, 15, 15);
-  background-color: #6d3799c4;
+  color: $theme1-color16;
+  background-color: $theme1-color15;
   padding: 5px;
   border: 0px;
   border-radius: 0px 4px 4px 0px;

@@ -2,67 +2,79 @@
   <div class="chart-block">
     <ChartPickUpButton @chart-pick-up="$emit('chart-pick-up', chart.id)" />
 
-    <div id="full-screen-wraper" :style="fullScreenWraperStyle">
-      <div class="chart-bar">
-        <h3 class="chart-title">
-          <b>{{ chart.grain }}</b>
-          {{ `: ${chart.start_date} - ${chart.end_date}` }}
-        </h3>
-        <div class="bar-buttons-wraper">
-          <button
-            class="minimize-chart-btn"
-            aria-label="Close"
-            @click="isMinimized = !isMinimized"
-          >
-            <i class="fas fa-window-minimize" aria-hidden="true">—</i>
-          </button>
+      <div id="full-screen-wraper" :style="fullScreenWraperStyle" ref="fullScreen">
+        <div class="chart-bar">
+          <h3 class="chart-title">
+            <b>{{ chart.grain }}</b>
+            {{ `: ${chart.start_date} - ${chart.end_date}` }}
+          </h3>
+          <div class="bar-buttons-wraper">
+            <button
+              class="minimize-chart-btn"
+              aria-label="Close"
+              @click="isMinimized = !isMinimized"
+            >
+              <i
+                v-if="!isMinimized"
+                class="fas fa-window-minimize"
+                aria-hidden="true"
+                >—</i
+              >
+              <b-icon v-if="isMinimized" icon="plus" />
+            </button>
 
-          <button class="full-screen-btn" @click="fullScreen">
-            <b-icon v-if="!isFullScreen" icon="fullscreen" />
-            <b-icon v-if="isFullScreen" icon="fullscreen-exit" />
-          </button>
+            <button
+              class="full-screen-btn"
+              @click="isFullScreen = !isFullScreen"
+            >
+              <b-icon v-if="!isFullScreen" icon="fullscreen" />
+              <b-icon v-if="isFullScreen" icon="fullscreen-exit" />
+            </button>
 
-          <button
-            class="delete-chart-btn"
-            aria-label="Close"
-            @click="$emit('delete-chart', chart.id)"
-          >
-            <span aria-hidden="true">&times;</span>
-          </button>
+            <button
+              class="delete-chart-btn"
+              aria-label="Close"
+              @click="$emit('delete-chart', chart.id)"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
         </div>
-      </div>
 
-      <div class="chart-content" v-if="!isMinimized">
-        <AppliedFunctionsList
-          :chartId="chart.id"
-          :appliedFunctions="chart.appliedFunctions"
-          @add-analysing-function="addAnalysingFunction"
-          @remove-function="removeAnalysingFunction"
-        />
-        <div class="chart-with-buttons">
-          <FunctionsSelector
-            :chartId="chart.id"
-            :appliedFunctions="chart.appliedFunctions"
-            @add-analysing-function="addAnalysingFunction"
-          />
-          <SelectsBlock
-            @ohlc-record-range-changed="changeOhlcRecordRange"
-            @change-chart-type="changeChartType"
-            :chartType="chart.chartType"
-            :recordRange="chart.ohlcRecordRange"
-          />
-        </div>
-        <Chart
-          :chart="chart"
-          :chartType="chart.chartType"
-          :appliedFunctions="chart.appliedFunctions"
-          :addedFunction="addedFunction"
-          :removedFunction="removedFunction"
-          :ohlcRecordRange="chart.ohlcRecordRange"
-          :layout="chartLayout"
-        />
+        <collapse-transition>
+          <div class="chart-content" v-if="!isMinimized">
+            <AppliedFunctionsList
+              :chartId="chart.id"
+              :appliedFunctions="chart.appliedFunctions"
+              @add-analysing-function="addAnalysingFunction"
+              @remove-function="removeAnalysingFunction"
+            />
+            <div class="chart-with-buttons">
+              <FunctionsSelector
+                :chartId="chart.id"
+                :appliedFunctions="chart.appliedFunctions"
+                @add-analysing-function="addAnalysingFunction"
+              />
+              <SelectsBlock
+                @ohlc-record-range-changed="changeOhlcRecordRange"
+                @change-chart-type="changeChartType"
+                :chartType="chart.chartType"
+                :recordRange="chart.ohlcRecordRange"
+              />
+            </div>
+            <Chart
+              :chart="chart"
+              :chartType="chart.chartType"
+              :appliedFunctions="chart.appliedFunctions"
+              :addedFunction="addedFunction"
+              :removedFunction="removedFunction"
+              :ohlcRecordRange="chart.ohlcRecordRange"
+              :layout="chartLayout"
+              :height="chartHeight"
+            />
+          </div>
+        </collapse-transition>
       </div>
-    </div>
 
     <ChartPullDownButton
       @chart-pull-down="$emit('chart-pull-down', chart.id)"
@@ -70,7 +82,23 @@
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
+// .expand-enter-from {
+//   height: 450px;
+// }
+// .expand-enter-from {
+//   height: 450px;
+// }
+// .expand-enter-to {
+//   height: 100%;
+// }
+
+.expand-enter-active,
+.expand-leave-active {
+  transition-property: height;
+  transition-duration: 1.25s;
+}
+
 .chart-with-buttons {
   width: 100%;
   height: 30px;
@@ -78,11 +106,11 @@
 }
 
 .chart-content {
-  height: calc(100% - 195px);
+  height: calc(100% - 55px);
 }
 
 .chart-bar {
-  background-color: rgba(3, 3, 31, 0.3);
+  background-color: $theme1-color17;
   width: 100%;
   height: 45px;
   color: white;
@@ -152,6 +180,8 @@
 </style>
 
 <script>
+import { CollapseTransition } from "@ivanv/vue-collapse-transition";
+
 import Chart from "./Chart.vue";
 import ChartPickUpButton from "./ChartBlockElements/ChartPickUpBtn.vue";
 import ChartPullDownButton from "./ChartBlockElements/ChartPullDownBtn.vue";
@@ -164,6 +194,7 @@ import constants from "../../data/constants.json";
 export default {
   name: "ChartBlock",
   components: {
+    CollapseTransition,
     Chart,
     ChartPickUpButton,
     ChartPullDownButton,
@@ -184,14 +215,30 @@ export default {
         top: "0px",
         "background-color": "#6d379969",
         "z-index": 0,
+        "transition-property": "height",
+        transition: "height 1.25s ease-out",
       },
       isFullScreen: false,
       chartLayout: null,
       isMinimized: false,
+      chartHeight: "450px",
+      mutex: false,
     };
   },
   props: {
     chart: Object,
+  },
+  watch: {
+    isFullScreen: function () {
+      if (!self.mutex) {
+        this.changeFullScreen();
+      }
+    },
+    isMinimized: function () {
+      if (!self.mutex) {
+        this.changeMinimized();
+      }
+    },
   },
   created: function () {
     this.chartLayout = constants.chart_layout.layout;
@@ -212,9 +259,14 @@ export default {
       this.removedFunction = func;
       this.$emit("remove-function", func, this.chart.id);
     },
-    fullScreen() {
-      //TODO: dostosować Plotly do rozmiarów okna; strzałki w prawo i lewo
-      if (!this.isFullScreen) {
+    changeMinimized() {
+      this.fullScreenWraperStyle["height"] = "auto";
+      if (this.isMinimized === true) {
+        this.isFullScreen = false;
+      }
+    },
+    changeFullScreen() {
+      if (this.isFullScreen) {
         this.fullScreenWraperStyle = {
           position: "fixed",
           height: "100%",
@@ -223,21 +275,25 @@ export default {
           top: "0px",
           "background-color": "#824691",
           "z-index": 1,
+          //   "transition-property": "height",
+          //   transition: "height 1.25s ease-out",
         };
+        this.chartHeight = "calc(100% - 150px)";
         this.isMinimized = false;
-        this.isFullScreen = true;
       } else {
         this.fullScreenWraperStyle = {
           position: "relative",
-          height: "650px",
+          height: "auto",
           width: "100%",
           left: "0px",
           top: "0px",
           "background-image": null,
           "background-color": "#6d379969",
           "z-index": 0,
+          //   "transition-property": "height",
+          //   transition: "height 1.25s ease-out",
         };
-        this.isFullScreen = false;
+        this.chartHeight = "450px";
       }
     },
   },

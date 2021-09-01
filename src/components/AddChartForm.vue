@@ -57,13 +57,13 @@
 </template>
 
 
-<style scoped>
+<style lang="scss" scoped>
 .form-container {
   display: inline-block;
   margin: 20px;
   border-radius: 25px;
   padding: 10px;
-  background-color: #6d379969;
+  background-color: $theme1-color11;
   color: white;
   width: 430px;
 }
