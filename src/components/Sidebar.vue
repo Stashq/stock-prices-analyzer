@@ -149,7 +149,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 a:hover {
   -ms-transform: scale(1.1);
   -webkit-transform: scale(1.1);
@@ -163,24 +163,25 @@ hr {
   width: 96%;
   clear: both;
   display: block;
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: $theme1-color8;
 }
 
 .sidenav {
+  min-height: 250px;
   width: 280px;
   bottom: 0;
   top: 0;
   margin-top: 60px;
   margin-bottom: 60px;
+
   position: fixed;
   z-index: 1;
   top: 20px;
   left: 10px;
   background: #eee;
-  overflow-x: hidden;
   border-radius: 25px;
-  box-shadow: 7px 7px 15px -5px rgba(0, 0, 0, 0.59);
-  background-color: rgba(3, 3, 31, 0.59);
+  box-shadow: 7px 7px 15px -5px $theme1-color9;
+  background-color: $theme1-color10;
 }
 
 .bi {
@@ -202,14 +203,14 @@ hr {
   align-items: center;
   padding: 0.25rem 0.5rem;
   font-weight: 600;
-  color: rgba(0, 0, 0, 0.65);
+  color: $theme1-color11;
   background-color: transparent;
   border: 0;
 }
 .btn-toggle:hover,
 .btn-toggle:focus {
   color: rgba(0, 0, 0, 0.85);
-  background-color: #d2f4ea;
+  background-color: $theme1-color12;
 }
 
 .btn-toggle::before {
@@ -239,9 +240,9 @@ hr {
   background-color: #d2f4ea;
 }
 
-.scrollarea {
+/* .scrollarea {
   overflow-y: auto;
-}
+} */
 
 .fw-semibold {
   font-weight: 600;

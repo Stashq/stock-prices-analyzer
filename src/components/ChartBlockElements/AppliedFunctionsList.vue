@@ -1,5 +1,6 @@
 <template>
   <div class="functions-list-block">
+    <h1 id="list-placeholder" v-if="appliedFunctions.length === 0">Analytics functions </h1>
     <div
       :key="func.name"
       v-for="func in appliedFunctions"
@@ -21,7 +22,13 @@
 </template>
 
 <style scoped>
+#list-placeholder {
+    font-style: italic;
+    color: #64311abd;
+}
+
 .functions-list-block {
+  border: 2px solid #eeeeee69;
   padding: 10px;
   background-color: #b84f1f69;
   width: calc(100% - 60px);
@@ -31,26 +38,22 @@
   overflow-y: scroll;
 }
 
-.functions-list-block::-webkit-scrollbar-track
-{
-  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+.functions-list-block::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   border-radius: 10px;
   background-color: #00000000;
 }
 
-.functions-list-block::-webkit-scrollbar
-{
+.functions-list-block::-webkit-scrollbar {
   width: 12px;
   background-color: #00000000;
 }
 
-.functions-list-block::-webkit-scrollbar-thumb
-{
+.functions-list-block::-webkit-scrollbar-thumb {
   border-radius: 10px;
-  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   background-color: #7272728c;
 }
-
 
 .functions-list-el {
   display: inline-block;
@@ -74,7 +77,6 @@
 </style>
 
 <script>
-
 export default {
   name: "AppliedFunctionsList",
   props: {
@@ -83,7 +85,7 @@ export default {
   },
   methods: {
     addAnalysingFunction(func) {
-        this.$emit('add-analysing-function', func);
+      this.$emit("add-analysing-function", func);
     },
   },
   emits: ["remove-function", "add-analysing-function"],

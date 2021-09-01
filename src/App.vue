@@ -23,7 +23,7 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  background-image: radial-gradient(#b44b4b, #9198e5);
+  background-image: radial-gradient($theme1-color2, $theme1-color1);
 }
 
 </style>

@@ -102,7 +102,7 @@
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 /* modal block */
 .delete-warning {
   margin: 10px 0px;
@@ -118,20 +118,20 @@
   margin: 20px 2%;
   border-radius: 25px;
   color: white;
-  background-color: #535dcf57;
+  background-color: $theme1-color3;
   overflow: hidden;
 }
 
 .commodity-name {
   border-radius: 15px;
-  background-color: #64077769;
+  background-color: $theme1-color4;
   overflow: hidden;
 }
 
 .commodity-params {
   overflow: hidden;
   border-radius: 20px;
-  background-color: #b84f1f69;
+  background-color: $theme1-color5;
   padding: 5px;
 }
 
@@ -176,7 +176,7 @@
   padding: 1px;
   height: 80px;
   width: 48%;
-  background-color: #b44b4b;
+  background-color: $theme1-color2;
   color: white;
   overflow: hidden;
   font-size: 20px;
@@ -184,11 +184,11 @@
 }
 
 .commodity-control-btn:hover {
-  background-color: #d35757;
+  background-color: $theme1-color6;
 }
 
 .commodity-control-btn:active {
-  background-color: rgb(146, 61, 61);
+  background-color: $theme1-color7;
 }
 
 /* Add file */
@@ -219,7 +219,7 @@ input[type="file"] {
 }
 .custom-file-upload {
   margin: auto;
-  background-color: #b44b4b;
+  background-color: $theme1-color2;
   border-radius: 25px;
   overflow: hidden;
   width: 95%;

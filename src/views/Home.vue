@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 main {
   margin-left: 290px;
 }

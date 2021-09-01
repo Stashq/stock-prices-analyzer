@@ -15,15 +15,22 @@
           @remove-function="removeAnalysingFunction"
         />
       </div>
-      <AddChartForm
-        :available_commodities="available_commodities"
-        @add-chart="addChart"
-      />
+      <div>
+        <AddChartForm
+          :available_commodities="available_commodities"
+          @add-chart="addChart"
+        />
+        <!-- TODO: add correlation chart  -->
+        <!-- <AddChartForm
+          :available_commodities="available_commodities"
+          @add-chart="addChart"
+        /> -->
+      </div>
     </main>
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 main {
   margin-left: 310px;
   margin-right: 10px;
@@ -67,19 +74,20 @@ export default {
   },
   created: function () {
     this.charts = JSON.parse(localStorage.getItem("dashboard_state"));
-    this.$api.get("/commodities/all/names")
-    .then((res) => {
+    this.$api
+      .get("/commodities/all/names")
+      .then((res) => {
         this.available_commodities = res.data;
-    })
-    .catch((err) => {
+      })
+      .catch((err) => {
         // TODO: error handle
         console.log(err);
-    })
+      });
   },
   methods: {
     changeChartType(chartType, chartId) {
       this.charts.find((chart) => chart.id === chartId).chartType = chartType;
-      console.log(this.charts)
+      console.log(this.charts);
     },
     changeOhlcRecordRange(range, chartId) {
       this.charts.find((chart) => chart.id === chartId).ohlcRecordRange = range;

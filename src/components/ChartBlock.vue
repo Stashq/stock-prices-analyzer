@@ -51,16 +51,16 @@
             :chartType="chart.chartType"
             :recordRange="chart.ohlcRecordRange"
           />
-          <Chart
-            :chart="chart"
-            :chartType="chart.chartType"
-            :appliedFunctions="chart.appliedFunctions"
-            :addedFunction="addedFunction"
-            :removedFunction="removedFunction"
-            :ohlcRecordRange="chart.ohlcRecordRange"
-            :layout="chartLayout"
-          />
         </div>
+        <Chart
+          :chart="chart"
+          :chartType="chart.chartType"
+          :appliedFunctions="chart.appliedFunctions"
+          :addedFunction="addedFunction"
+          :removedFunction="removedFunction"
+          :ohlcRecordRange="chart.ohlcRecordRange"
+          :layout="chartLayout"
+        />
       </div>
     </div>
 
@@ -72,12 +72,13 @@
 
 <style scoped>
 .chart-with-buttons {
+  width: 100%;
+  height: 30px;
   position: relative;
-  height: calc(100% - 165px);
 }
 
 .chart-content {
-  height: 100%;
+  height: calc(100% - 195px);
 }
 
 .chart-bar {
@@ -217,6 +218,7 @@ export default {
         this.fullScreenWraperStyle = {
           position: "fixed",
           height: "100%",
+          width: "100%",
           left: "0px",
           top: "0px",
           "background-color": "#824691",
@@ -228,6 +230,7 @@ export default {
         this.fullScreenWraperStyle = {
           position: "relative",
           height: "650px",
+          width: "100%",
           left: "0px",
           top: "0px",
           "background-image": null,

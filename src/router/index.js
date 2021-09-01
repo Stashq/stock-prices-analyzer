@@ -45,6 +45,24 @@ const routes = [
             import(/* webpackChunkName: "singout" */ "../views/SingOut.vue"),
     },
     {
+        path: "/verification",
+        name: "Verification",
+        component: () =>
+            import(/* webpackChunkName: "verification" */ "../views/Verification.vue"),
+    },
+    {
+        path: "/forgot",
+        name: "Forgot",
+        component: () =>
+            import(/* webpackChunkName: "forgot" */ "../views/Forgot.vue"),
+    },
+    {
+        path: "/reset_password",
+        name: "ResetPassword",
+        component: () =>
+            import(/* webpackChunkName: "reset_password" */ "../views/ResetPassword.vue"),
+    },
+    {
         path: "*",
         name: "PageNotFound",
         component: () =>

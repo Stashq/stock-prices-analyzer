@@ -7,7 +7,7 @@
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .center {
     color: white;
     position: absolute;

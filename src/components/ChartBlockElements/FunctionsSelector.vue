@@ -57,7 +57,6 @@
   position: absolute;
   z-index: 1;
   width: 200px;
-  top: -20px;
   left: calc(50% - 100px);
 }
 

@@ -4,58 +4,14 @@
     <main>
       <div class="wrapper fadeInDown">
         <div id="formContent">
-          <form id="Login" @submit="singIn">
-            <div>
-              <span class="input-description">First Name</span>
-              <input
-                required
-                type="text"
-                v-model="firstName"
-                class="fadeIn first"
-                name="firstName"
-                placeholder="Joe"
-              />
-            </div>
-            <div>
-              <span class="input-description">Last Name</span>
-              <input
-                required
-                type="text"
-                v-model="lastName"
-                class="fadeIn second"
-                name="lastName"
-                placeholder="Smith"
-              />
-            </div>
-            <div>
-              <span class="input-description">Email</span>
-              <input
-                required
-                type="email"
-                v-model="email"
-                class="fadeIn third"
-                name="email"
-                placeholder="example@mail.com"
-              />
-            </div>
-            <div>
-              <span class="input-description">Username</span>
-              <input
-                required
-                type="text"
-                v-model="username"
-                class="fadeIn fourth"
-                name="username"
-                placeholder="joe1984"
-              />
-            </div>
+          <form id="Login" @submit="submit">
             <div>
               <span class="input-description">Password</span>
               <input
                 required
                 type="password"
                 v-model="password"
-                class="fadeIn fifth"
+                class="fadeIn first"
                 name="password"
                 placeholder="password"
               />
@@ -66,16 +22,16 @@
                 required
                 type="password"
                 v-model="passwordAgain"
-                class="fadeIn sixth"
+                class="fadeIn second"
                 name="passwordAgain"
                 placeholder="repeat password"
               />
             </div>
-            <input type="submit" class="fadeIn fourth" value="Sing in" />
+            <input type="submit" class="fadeIn fourth" value="Reset password" />
           </form>
 
-          <p style="color: red" id="error-message" v-show="error_info">
-            {{ error_info }}
+          <p :style="'color: ' + info_color" id="error-message" v-show="info">
+            {{ info }}
           </p>
         </div>
       </div>
@@ -389,47 +345,53 @@ export default {
   },
   data() {
     return {
-      firstName: null,
-      lastName: null,
-      email: null,
-      username: null,
       password: null,
       passwordAgain: null,
-      error_info: null,
+      info: null,
+      info_color: null,
     };
   },
   methods: {
-    singIn: function (e) {
+    submit: function (e) {
       e.preventDefault();
 
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const userId = urlParams.get("user_id");
+      const token = urlParams.get("token");
+
       if (this.password !== this.passwordAgain) {
-        this.error_info = "Passwords are not the same.";
+        this.info = "Passwords are not the same.";
+        this.info_color = "red";
         return false;
       }
-      const account_fields = {
-        first_name: this.firstName,
-        last_name: this.lastName,
-        email: this.email,
-        username: this.username,
-        password_hash: this.password,
-      };
       this.$api
-        .post("/users", account_fields)
+        .put(
+          "/users/" + userId.toString() + "/password",
+          {
+              token: token,
+              new_password: this.password,
+          },
+          {}
+        )
         .then(() => {
-          this.error_info = null;
-          alert("Account has been created");
+          //   this.info = "Password reset successful";
+          //   this.info_color = "green";
+          alert("Password reset successful");
           this.$router.push("/login");
         })
         .catch((err) => {
+          console.log(err);
           if (!err.response) {
-            this.error_info = "Connection refused. Please, try later.";
+            this.info = "Connection refused. Please, try later.";
           } else if (err.response.status >= 500) {
-            this.error_info = "Internal server error. Please, try later.";
+            this.info = "Internal server error. Please, try later.";
           } else if (err.response.status >= 400) {
-            this.error_info = err.response.data["detail"];
+            this.info = "Token expired.";
           } else {
-            this.error_info = null;
+            this.info = null;
           }
+          this.info_color = "red";
         });
     },
   },

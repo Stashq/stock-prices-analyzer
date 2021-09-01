@@ -1,13 +1,4 @@
 {
-    "commodities": [
-        "coffee",
-        "corn",
-        "cotton",
-        "oats",
-        "soybean",
-        "sugar",
-        "wheat"
-    ],
     "chart_types": [
         "Line",
         "OHLC",

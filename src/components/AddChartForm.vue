@@ -2,7 +2,9 @@
   <div class="form-container">
     <form
       id="addChart"
-      @submit.prevent="$emit('add-chart', start_date, end_date, selected_commodity)"
+      @submit.prevent="
+        $emit('add-chart', start_date, end_date, selected_commodity)
+      "
     >
       <div class="variable-row-container">
         <span class="variable-name-span">Start date</span>
@@ -57,13 +59,13 @@
 
 <style scoped>
 .form-container {
-  margin: auto;
+  display: inline-block;
+  margin: 20px;
   border-radius: 25px;
   padding: 10px;
   background-color: #6d379969;
   color: white;
-  width: 45%;
-  min-width: 430px;
+  width: 430px;
 }
 
 .form-el {
@@ -97,7 +99,7 @@
 }
 
 .inputs-container {
-  width: 35%;
+  width: 50%;
   text-align: left;
 }
 

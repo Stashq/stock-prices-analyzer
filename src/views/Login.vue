@@ -28,7 +28,7 @@
 
           <!-- Remind Passowrd -->
           <div id="formFooter">
-            <a class="underlineHover fadeIn third" href="#">Forgot Password?</a>
+            <a class="underlineHover fadeIn third" href="/forgot">Forgot Password?</a>
             <a class="underlineHover fadeIn third" href="/singin">Create account</a>
           </div>
         </div>
@@ -37,7 +37,7 @@
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 
 a {
   color: #92badd;
@@ -346,19 +346,17 @@ export default {
         .then((res) => {
           this.error_info = null;
           const token = `${res.data.token_type} ${res.data.access_token}`;
-          localStorage.setItem('token', token)
+          localStorage.setItem('token', token);
           this.$api.defaults.headers.common[
             "Authorization" 
-          ] = token
+          ] = token;
           this.$router.push("home");
         })
         .catch((err) => {
-          console.log(err)
           if (!err.response) {
             // network error
-            console.log(err)
             this.error_info = "Connection refused. Please, try later.";
-          } else if (err.response.status == 500) {
+          } else if (err.response.status >= 500) {
             this.error_info = "Internal server error. Please, try later.";
           } else if (err.response.status >= 400) {
             this.error_info = "Bad login or password.";
