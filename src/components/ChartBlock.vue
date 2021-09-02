@@ -2,7 +2,20 @@
   <div class="chart-block">
     <ChartPickUpButton @chart-pick-up="$emit('chart-pick-up', chart.id)" />
 
-      <div id="full-screen-wraper" :style="fullScreenWraperStyle" ref="fullScreen">
+    <!-- <div class="interaction">
+      <button @click="toggleBigger">
+        <transition name="expand" mode="out-in">
+          <div class="default" v-bind:class="{ bigger: showButton }">B</div>
+        </transition>
+      </button>
+    </div> -->
+
+    <transition name="full-screen">
+      <div
+        id="full-screen-wraper"
+        class="default-chart"
+        :class="{ 'full-screen-chart': isFullScreen }"
+      >
         <div class="chart-bar">
           <h3 class="chart-title">
             <b>{{ chart.grain }}</b>
@@ -75,6 +88,7 @@
           </div>
         </collapse-transition>
       </div>
+    </transition>
 
     <ChartPullDownButton
       @chart-pull-down="$emit('chart-pull-down', chart.id)"
@@ -83,21 +97,99 @@
 </template>
 
 <style lang="scss" scoped>
-// .expand-enter-from {
-//   height: 450px;
-// }
-// .expand-enter-from {
-//   height: 450px;
-// }
-// .expand-enter-to {
-//   height: 100%;
+.default-chart {
+  position: relative;
+  height: auto;
+  width: 100%;
+  left: 0px;
+  top: 0px;
+  background-color: #6d379969;
+  z-index: 0;
+  transition-property: height, width, left, top;
+}
+
+.full-screen-chart {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  left: 0px;
+  top: 0px;
+  background-color: #824691;
+  z-index: 1;
+  transition-property: height, width, left, top;
+}
+
+// // Try with full screen transition 
+// .full-screen-enter-active,
+// .full-screen-leave-active {
+//   transition-property: height, width, left, top;
+//   transition-duration: 5s;
 // }
 
-.expand-enter-active,
-.expand-leave-active {
-  transition-property: height;
-  transition-duration: 1.25s;
-}
+// .full-screen-leave-to {
+//   height: 100%;
+//   width: 100%;
+// }
+
+// .full-screen-enter {
+//   height: auto;
+//   width: 100%;
+//   left: 0px;
+//   top: 0px;
+// }
+
+
+
+// // Example with button 
+// .interaction {
+//   border: 10px solid lightgreen;
+//   max-height: 225px;
+//   transition: max-height 0.25s ease-out;
+// }
+
+// .default {
+//   transition: max-height 0.25s ease-out;
+//   position: relative;
+//   height: auto;
+//   width: 100%;
+//   left: 0px;
+//   top: 0px;
+//   background-color: #6d379969;
+//   z-index: 0;
+//   transition-property: all;
+// }
+// .bigger {
+//   transition: max-height 0.25s ease-out;
+//   position: fixed;
+//   height: 100%;
+//   width: 100%;
+//   left: 0px;
+//   top: 0px;
+//   background-color: #824691;
+//   z-index: 1;
+//   transition-duration: 5s;
+//   transition-property: all;
+// }
+
+// .expand-enter-active,
+// .expand-leave-active {
+//   transition-property: all;
+//   transition-duration: 5s;
+// }
+
+// .expand-leave-to {
+//   width: 200px;
+//   height: 200px;
+// }
+
+// .expand-enter {
+//   width: 20px;
+//   height: 20px;
+// }
+
+
+
+
 
 .chart-with-buttons {
   width: 100%;
@@ -204,6 +296,8 @@ export default {
   },
   data() {
     return {
+      showButton: true,
+      show: true,
       addedFunction: null,
       removedFunction: null,
       functionSelectorIsOpen: false,
@@ -215,8 +309,6 @@ export default {
         top: "0px",
         "background-color": "#6d379969",
         "z-index": 0,
-        "transition-property": "height",
-        transition: "height 1.25s ease-out",
       },
       isFullScreen: false,
       chartLayout: null,
@@ -245,6 +337,9 @@ export default {
     this.chartLayout.range = [this.chart.start_date, this.chart.end_date];
   },
   methods: {
+    toggleBigger() {
+      this.showButton = !this.showButton;
+    },
     changeChartType(chartType) {
       this.$emit("change-chart-type", chartType, this.chart.id);
     },
@@ -267,32 +362,28 @@ export default {
     },
     changeFullScreen() {
       if (this.isFullScreen) {
-        this.fullScreenWraperStyle = {
-          position: "fixed",
-          height: "100%",
-          width: "100%",
-          left: "0px",
-          top: "0px",
-          "background-color": "#824691",
-          "z-index": 1,
-          //   "transition-property": "height",
-          //   transition: "height 1.25s ease-out",
-        };
+        // this.fullScreenWraperStyle = {
+        //   position: "fixed",
+        //   height: "100%",
+        //   width: "100%",
+        //   left: "0px",
+        //   top: "0px",
+        //   "background-color": "#824691",
+        //   "z-index": 1,
+        // };
         this.chartHeight = "calc(100% - 150px)";
         this.isMinimized = false;
       } else {
-        this.fullScreenWraperStyle = {
-          position: "relative",
-          height: "auto",
-          width: "100%",
-          left: "0px",
-          top: "0px",
-          "background-image": null,
-          "background-color": "#6d379969",
-          "z-index": 0,
-          //   "transition-property": "height",
-          //   transition: "height 1.25s ease-out",
-        };
+        // this.fullScreenWraperStyle = {
+        //   position: "relative",
+        //   height: "auto",
+        //   width: "100%",
+        //   left: "0px",
+        //   top: "0px",
+        //   "background-image": null,
+        //   "background-color": "#6d379969",
+        //   "z-index": 0,
+        // };
         this.chartHeight = "450px";
       }
     },

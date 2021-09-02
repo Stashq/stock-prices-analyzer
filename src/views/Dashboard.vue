@@ -7,19 +7,24 @@
         <li v-for="item in items" v-bind:key="item">
           {{ item }}
         </li> -->
+
       <transition-group name="flip-list" tag="ul">
-      <div :key="chart.id" v-for="chart in charts" class="dashboard-container">
-        <ChartBlock
-          :chart="chart"
-          @delete-chart="deleteChart"
-          @chart-pick-up="pickUpChart"
-          @chart-pull-down="pullDownChart"
-          @change-chart-type="changeChartType"
-          @ohlc-record-range-changed="changeOhlcRecordRange"
-          @add-analysing-function="addAnalysingFunction"
-          @remove-function="removeAnalysingFunction"
-        />
-      </div>
+        <div
+          :key="chart.id"
+          v-for="chart in charts"
+          class="dashboard-container"
+        >
+          <ChartBlock
+            :chart="chart"
+            @delete-chart="deleteChart"
+            @chart-pick-up="pickUpChart"
+            @chart-pull-down="pullDownChart"
+            @change-chart-type="changeChartType"
+            @ohlc-record-range-changed="changeOhlcRecordRange"
+            @add-analysing-function="addAnalysingFunction"
+            @remove-function="removeAnalysingFunction"
+          />
+        </div>
       </transition-group>
       <div>
         <AddChartForm
@@ -37,6 +42,7 @@
 </template>
 
 <style lang="scss" scoped>
+
 .flip-list-move {
   transition: transform 1s;
 }
@@ -57,7 +63,7 @@ import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/Sidebar.vue";
 import ChartBlock from "../components/ChartBlock.vue";
 import AddChartForm from "../components/AddChartForm.vue";
-import _ from 'lodash';
+import _ from "lodash";
 
 const constants = require("../../data/constants.json");
 
